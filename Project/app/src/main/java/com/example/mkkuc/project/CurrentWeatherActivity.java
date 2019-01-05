@@ -58,7 +58,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
 
     TextView txtConnection, txtCityAndCountry, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius;
     ImageView imageView;
-
+    AlertDialog dialog;
     LocationManager locationManager;
     String provider;
     static double lat, lon;
@@ -125,6 +125,8 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
         }
 
         //Get Coordinates
+
+        dialog = setProgressDialog();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         provider = locationManager.getBestProvider(new Criteria(), false);
         Location location = locationManager.getLastKnownLocation(provider);
@@ -199,7 +201,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
     @Override
     public void onProviderDisabled(String provider) {}
 
-    public AlertDialog setProgressDialog() {
+    private AlertDialog setProgressDialog() {
 
         int llPadding = 30;
         LinearLayout ll = new LinearLayout(this);
@@ -248,11 +250,11 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
 
 
     private class GetWeather extends AsyncTask<String, Void, String> {
-        AlertDialog dialog;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog = setProgressDialog();
+
             if(!isNetworkConnection()){
                 txtConnection.setText("Check your network connection");
                 dialog.dismiss();
