@@ -3,19 +3,15 @@ package com.example.mkkuc.project;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -30,7 +26,6 @@ import com.example.mkkuc.project.common.CountryCodes;
 import com.example.mkkuc.project.database.WeatherEntity;
 import com.example.mkkuc.project.helper.Helper;
 import com.example.mkkuc.project.model.OpenWeatherMap;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
@@ -38,14 +33,11 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Type;
 import java.util.List;
 
-public class CurrentWeatherActivity extends AppCompatActivity implements LocationListener{
+public class LookWeatherActivity extends AppCompatActivity {
 
-    TextView txtConnection, txtCityAndCountry, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius;
-    ImageView imageView;
+    TextView txtConnectionL, txtCityAndCountryL, txtLastUpdateL, txtDescriptionL, txtHumidityL, txtTimeL, txtCelsiusL;
+    //ImageView imageViewL;
     AlertDialog dialog;
-    LocationManager locationManager;
-    String provider;
-    static double lat, lon;
     OpenWeatherMap openWeatherMap = new OpenWeatherMap();
 
     int MY_PERMISSION = 0;
@@ -53,13 +45,13 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.current_weather);
-        handleLocation();
+        setContentView(R.layout.look_weather);
+        handleLastUpdateWeather();
     }
 
     private boolean arePermissions(){
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CurrentWeatherActivity.this, new String[]{
+            ActivityCompat.requestPermissions(LookWeatherActivity.this, new String[]{
                     Manifest.permission.INTERNET,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -82,20 +74,48 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
         return false;
     }
 
+    public void handleLastUpdateWeather(){
+        dialog = setProgressDialog();
+        txtConnectionL = (TextView) findViewById(R.id.txtConnectionL);
+        txtConnectionL.setText("");
+        txtCityAndCountryL = (TextView) findViewById(R.id.txtCityAndCountryL);
+        txtLastUpdateL = (TextView) findViewById(R.id.txtLastUpdateL);
+        txtDescriptionL = (TextView) findViewById(R.id.txtDescriptionL);
+        txtHumidityL = (TextView) findViewById(R.id.txtHumidityL);
+        txtTimeL = (TextView) findViewById(R.id.txtTimeL);
+        txtCelsiusL = (TextView) findViewById(R.id.txtCelsiusL);
+        //imageViewL = (ImageView) findViewById(R.id.imageViewL);
+
+        Intent intent = getIntent();
+        int id = 0;
+        int stringID = intent.getIntExtra("WeatherID", id);
+
+        WeatherEntity weatherEntity = MainActivity.appDatabase.weatherDao().getWeather(stringID);
+        txtCityAndCountryL.setText(String.format("%s, %s", weatherEntity.getCity(), weatherEntity.getCountry()));
+        txtLastUpdateL.setText(String.format("Last Updated: %s", weatherEntity.getLastUpdate()));
+        txtDescriptionL.setText(String.format("%s", weatherEntity.getDescription()));
+        txtHumidityL.setText(String.format("Humidity: %d%%", weatherEntity.getHumidity()));
+        txtTimeL.setText(String.format("Sunrise: %s \n Sunset: %s",
+                Common.unixTimeStampToDateTime(weatherEntity.getSunrise()),
+                Common.unixTimeStampToDateTime(weatherEntity.getSunset())));
+        txtCelsiusL.setText(String.format("Temperature: %.2f °C", weatherEntity.getTemp()));
+        dialog.dismiss();
+    }
+
     public void handleLocation(){
         dialog = setProgressDialog();
-        txtConnection = (TextView) findViewById(R.id.txtConnection);
-        txtConnection.setText("");
-        txtCityAndCountry = (TextView) findViewById(R.id.txtCityAndCountry);
-        txtLastUpdate = (TextView) findViewById(R.id.txtLastUpdate);
-        txtDescription = (TextView) findViewById(R.id.txtDescription);
-        txtHumidity = (TextView) findViewById(R.id.txtHumidity);
-        txtTime = (TextView) findViewById(R.id.txtTime);
-        txtCelsius = (TextView) findViewById(R.id.txtCelsius);
-        imageView = (ImageView) findViewById(R.id.imageView);
+        txtConnectionL = (TextView) findViewById(R.id.txtConnectionL);
+        txtConnectionL.setText("");
+        txtCityAndCountryL = (TextView) findViewById(R.id.txtCityAndCountryL);
+        txtLastUpdateL = (TextView) findViewById(R.id.txtLastUpdateL);
+        txtDescriptionL = (TextView) findViewById(R.id.txtDescriptionL);
+        txtHumidityL = (TextView) findViewById(R.id.txtHumidityL);
+        txtTimeL = (TextView) findViewById(R.id.txtTimeL);
+        txtCelsiusL = (TextView) findViewById(R.id.txtCelsiusL);
+       // imageViewL = (ImageView) findViewById(R.id.imageViewL);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CurrentWeatherActivity.this, new String[]{
+            ActivityCompat.requestPermissions(LookWeatherActivity.this, new String[]{
                     Manifest.permission.INTERNET,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -105,81 +125,13 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
             }, MY_PERMISSION);
             return;
         }
+        Intent intent = getIntent();
+        int id = 0;
+        int stringID = intent.getIntExtra("WeatherID", id);
 
-        //Get Coordinates
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        provider = locationManager.getBestProvider(new Criteria(), false);
-        Location location = locationManager.getLastKnownLocation(provider);
-
-        if (location == null)
-            Log.e("TAG","No Location");
+        WeatherEntity weatherEntity = MainActivity.appDatabase.weatherDao().getWeather(stringID);
+        new GetWeather().execute(Common.apiRequest(weatherEntity.getCity(), weatherEntity.getCountry()));
     }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if(!arePermissions())
-            return;
-
-        if(!isNetworkConnection()){
-            txtConnection.setText("Check your network connection");
-            return;
-        }
-
-        try {
-            locationManager.removeUpdates(this);
-        }
-        catch (NullPointerException e){
-            return;
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CurrentWeatherActivity.this, new String[]{
-                    Manifest.permission.INTERNET,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_NETWORK_STATE,
-                    Manifest.permission.SYSTEM_ALERT_WINDOW,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            }, MY_PERMISSION);
-            return;
-        }
-
-        if(!isNetworkConnection()){
-            txtConnection.setText("Check your network connection");
-            return;
-        }
-
-        try {
-            locationManager.requestLocationUpdates(provider, 600, 10, this);
-        }
-        catch (NullPointerException e){
-            return;
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        lat = location.getLatitude();
-        lon = location.getLongitude();
-
-        new GetWeather().execute(Common.apiRequest(lat, lon));
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-    @Override
-    public void onProviderEnabled(String provider) {}
-
-    @Override
-    public void onProviderDisabled(String provider) {}
 
     private AlertDialog setProgressDialog() {
 
@@ -228,7 +180,6 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
         return dialog;
     }
 
-
     private class GetWeather extends AsyncTask<String, Void, String> {
 
         @Override
@@ -236,7 +187,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
             super.onPreExecute();
 
             if(!isNetworkConnection()){
-                txtConnection.setText("Check your network connection");
+                txtConnectionL.setText("Check your network connection");
                 dialog.dismiss();
                 return;
             }
@@ -260,7 +211,6 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
                 return;
             }
 
-
             Gson gson = new Gson();
             Type mType = new TypeToken<OpenWeatherMap>(){}.getType();
             openWeatherMap = gson.fromJson(s,mType);
@@ -273,18 +223,22 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
             double temp = openWeatherMap.getMain().getTemp();
             double sunrise = openWeatherMap.getSys().getSunrise();
             double sunset = openWeatherMap.getSys().getSunset();
+            double lat = openWeatherMap.getCoord().getLat();
+            double lon = openWeatherMap.getCoord().getLon();
 
-            txtCityAndCountry.setText(String.format("%s, %s", city, country));
-            txtLastUpdate.setText(String.format("Last Updated: %s", lastUpdate));
-            txtDescription.setText(String.format("%s", description));
-            txtHumidity.setText(String.format("Humidity: %d%%", humidity));
-            txtTime.setText(String.format("Sunrise: %s \n Sunset: %s",
+            txtCityAndCountryL.setText(String.format("%s, %s", city, country));
+            txtLastUpdateL.setText(String.format("Last Updated: %s", lastUpdate));
+            txtDescriptionL.setText(String.format("%s", description));
+            txtHumidityL.setText(String.format("Humidity: %d%%", humidity));
+            txtTimeL.setText(String.format("Sunrise: %s \n Sunset: %s",
                     Common.unixTimeStampToDateTime(sunrise),
                     Common.unixTimeStampToDateTime(sunset)));
-            txtCelsius.setText(String.format("Temperature: %.2f °C", temp));
-            Picasso.get()
+            txtCelsiusL.setText(String.format("Temperature: %.2f °C", temp));
+            /*Picasso.get()
                     .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
-                    .into(imageView);
+                    .into(imageViewL);*/
+
+           // DatabaseHelper db = new DatabaseHelper(LookWeatherActivity.this);
 
             country = new CountryCodes().getCountryName(country);
 
@@ -317,6 +271,5 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
             dialog.dismiss();
         }
     }
-
 
 }

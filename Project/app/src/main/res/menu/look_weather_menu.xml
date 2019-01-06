@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/update_look"
+        android:title="Update"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/delete_look"
+        android:title="Delete"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/show_more_details_look"
+        android:title="Show more details"
+        app:showAsAction="never" />
+</menu>

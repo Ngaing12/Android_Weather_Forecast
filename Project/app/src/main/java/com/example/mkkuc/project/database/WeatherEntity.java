@@ -5,6 +5,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.arch.persistence.room.ColumnInfo;
 
+import com.example.mkkuc.project.adapter.ItemModel;
+
 @Entity(tableName = "weathers")
 public class WeatherEntity {
 
@@ -81,6 +83,20 @@ public class WeatherEntity {
         this.temp = temp;
         this.sunrise = sunrise;
         this.sunset = sunset;
+    }
+
+    public WeatherEntity(ItemModel itemModel) {
+        this.weatherID = itemModel.getWeatherEntity().weatherID;
+        this.country = itemModel.getWeatherEntity().getCountry();
+        this.city = itemModel.getWeatherEntity().getCity();
+        this.description = itemModel.getWeatherEntity().getDescription();
+        this.lastUpdate = itemModel.getWeatherEntity().getLastUpdate();
+        this.humidity = itemModel.getWeatherEntity().getHumidity();
+        this.lat = itemModel.getWeatherEntity().getLat();
+        this.lon = itemModel.getWeatherEntity().getLon();
+        this.temp = itemModel.getWeatherEntity().temp;
+        this.sunrise = itemModel.getWeatherEntity().getSunrise();
+        this.sunset = itemModel.getWeatherEntity().getSunset();
     }
 
     public int getWeatherID() {

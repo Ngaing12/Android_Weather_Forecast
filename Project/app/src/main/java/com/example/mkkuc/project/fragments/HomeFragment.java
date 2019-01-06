@@ -36,12 +36,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnReadWeather = view.findViewById(R.id.btn_view_weathers);
         btnReadWeather.setOnClickListener(this);
 
-        btnDeleteWeather = view.findViewById(R.id.btn_delete_weather);
-        btnDeleteWeather.setOnClickListener(this);
-
-        btnUpdateWeather = view.findViewById(R.id.btn_update_weather);
-        btnUpdateWeather.setOnClickListener(this);
-
         btnCurrentWeather = view.findViewById(R.id.btn_find_current_weather);
         btnCurrentWeather.setOnClickListener(this);
 
@@ -65,31 +59,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         .commit();
                 break;
 
-            case R.id.btn_delete_weather:
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, new DeleteWeatherFragment())
-                        .addToBackStack(null)
-                        .commit();
-                break;
-
-            case R.id.btn_update_weather:
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, new UpdateWeatherFragment())
-                        .addToBackStack(null)
-                        .commit();
-                break;
-
             case R.id.btn_find_current_weather:
                 Intent intent = new Intent(getActivity(), CurrentWeatherActivity.class);
                 startActivity(intent);
                 break;
         }
     }
-
-    private void moveToNewActivity() {
-        Intent i = new Intent(getActivity(), CurrentWeatherActivity.class);
-        startActivity(i);
-        ((Activity) getActivity()).overridePendingTransition(0,0);
-    }
-
 }

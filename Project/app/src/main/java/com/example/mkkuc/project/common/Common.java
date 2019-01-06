@@ -2,13 +2,16 @@ package com.example.mkkuc.project.common;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class Common {//f6d8334b80a7514b31b9ad96d4a10d57
-    public static String API_KEY = "918d6775e0751eb612962d88e83666ab";
-    public static String API_LINK = "http://api.openweathermap.org/data/2.5/weather";
+    static String API_KEY = "918d6775e0751eb612962d88e83666ab";
+    static String API_LINK = "http://api.openweathermap.org/data/2.5/weather";
 
     @NonNull
     public static String apiRequest(double lat, double lon){
@@ -22,6 +25,13 @@ public class Common {//f6d8334b80a7514b31b9ad96d4a10d57
     @NonNull
     public static String apiRequest(String city, String country){
         StringBuilder sb = new StringBuilder(API_LINK);
+
+        if(new CountryCodes().isCountry(country)){
+                    String countryCode = new CountryCodes().getCountryCode(country);
+                    sb.append(String.format("?q=%s,%s&APPID=%s&units=metric", city, countryCode, API_KEY));
+                    return sb.toString();
+        }
+
         sb.append(String.format("?q=%s,%s&APPID=%s&units=metric", city, country, API_KEY));
         return sb.toString();
     }

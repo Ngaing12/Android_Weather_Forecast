@@ -1,6 +1,7 @@
 package com.example.mkkuc.project.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.mkkuc.project.FindWeatherActivity;
 import com.example.mkkuc.project.MainActivity;
 import com.example.mkkuc.project.R;
 import com.example.mkkuc.project.database.WeatherEntity;
@@ -28,7 +30,7 @@ public class FindWeatherFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_find_weather, container, false);
@@ -48,10 +50,15 @@ public class FindWeatherFragment extends Fragment {
                 weatherEntity.setCountry(country);
 
                 MainActivity.appDatabase.weatherDao().addWeather(weatherEntity);
-                Toast.makeText(getActivity(), "Weather added", Toast.LENGTH_LONG).show();
 
                 cityText.setText("");
                 countryText.setText("");
+
+                Intent intent = new Intent(getActivity().getApplicationContext(), FindWeatherActivity.class);
+                intent.putExtra("City", city);
+                intent.putExtra("Country", country);
+                startActivity(intent);
+
             }
         });
         return view;

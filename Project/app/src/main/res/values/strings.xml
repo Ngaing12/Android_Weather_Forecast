@@ -4,21 +4,7 @@
 
     <string name="find_weather">Find weather</string>
 
-    <string-array name="android_versions">
-        <item>Cupcake</item>
-        <item>Donut</item>
-        <item>Eclair</item>
-        <item>Froyo</item>
-        <item>Gingerbread</item>
-        <item>Honeycomb</item>
-        <item>Ice Cream</item>
-        <item>Jelly Bean</item>
-        <item>KitKat</item>
-        <item>Lollipop</item>
-        <item>Marshmallow</item>
-        <item>Nougat</item>
-        <item>Oreo</item>
-        <item>Android P</item>
-    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

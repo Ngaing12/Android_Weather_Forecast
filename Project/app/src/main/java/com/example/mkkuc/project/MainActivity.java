@@ -2,31 +2,35 @@ package com.example.mkkuc.project;
 
 import android.Manifest;
 import android.arch.persistence.room.Room;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
-import com.example.mkkuc.project.adapter.RecyclerAdapter;
+import com.example.mkkuc.project.adapter.ItemAdapter;
+import com.example.mkkuc.project.adapter.ItemModel;
 import com.example.mkkuc.project.database.AppDatabase;
+import com.example.mkkuc.project.database.WeatherEntity;
+import com.example.mkkuc.project.fragments.FindWeatherFragment;
 import com.example.mkkuc.project.fragments.HomeFragment;
+import com.example.mkkuc.project.fragments.ReadWeatherFragment;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity /*implements LocationListener*/ {
+public class MainActivity extends AppCompatActivity {
 
     public static FragmentManager fragmentManager;
     public static AppDatabase appDatabase;
-
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    List<String> list;
-    RecyclerAdapter adapter;
-
     int MY_PERMISSION = 0;
 
     @Override
@@ -52,14 +56,6 @@ public class MainActivity extends AppCompatActivity /*implements LocationListene
                 return;
             fragmentManager.beginTransaction().add(R.id.fragment_container, new HomeFragment()).commit();
         }
-
-        //RecyclerView
-        /*recyclerView = findViewById(R.id.recycler_view_List);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        list = Arrays.asList(getResources().getStringArray(R.array.android_versions));
-        adapter = new RecyclerAdapter(list);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);*/
     }
+
 }
