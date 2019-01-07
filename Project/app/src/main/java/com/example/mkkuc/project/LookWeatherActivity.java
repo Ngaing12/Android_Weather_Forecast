@@ -10,9 +10,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,10 +27,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mkkuc.project.common.Common;
 import com.example.mkkuc.project.common.CountryCodes;
 import com.example.mkkuc.project.database.WeatherEntity;
+import com.example.mkkuc.project.fragments.ReadWeatherFragment;
 import com.example.mkkuc.project.helper.Helper;
 import com.example.mkkuc.project.model.OpenWeatherMap;
 import com.google.gson.Gson;
@@ -31,14 +40,20 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LookWeatherActivity extends AppCompatActivity {
 
     TextView txtConnectionL, txtCityAndCountryL, txtLastUpdateL, txtDescriptionL, txtHumidityL, txtTimeL, txtCelsiusL;
-    //ImageView imageViewL;
+    ImageView imageViewL;
+    Intent intent;
     AlertDialog dialog;
     OpenWeatherMap openWeatherMap = new OpenWeatherMap();
+
+    int updateWeatherID;
+    String updateCity;
+    String updateCountry;
 
     int MY_PERMISSION = 0;
 
@@ -46,7 +61,12 @@ public class LookWeatherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.look_weather);
-        handleLastUpdateWeather();
+        Intent intent = getIntent();
+        String update = intent.getStringExtra("Update");
+        if(update != null)
+            handleLocation();
+        else
+            handleLastUpdateWeather();
     }
 
     private boolean arePermissions(){
@@ -90,8 +110,10 @@ public class LookWeatherActivity extends AppCompatActivity {
         int id = 0;
         int stringID = intent.getIntExtra("WeatherID", id);
 
-        WeatherEntity weatherEntity = MainActivity.appDatabase.weatherDao().getWeather(stringID);
-        txtCityAndCountryL.setText(String.format("%s, %s", weatherEntity.getCity(), weatherEntity.getCountry()));
+        updateWeatherID = stringID;
+
+        WeatherEntity weatherEntity = MainActivity.appDatabase.weatherDao().getWeather(updateWeatherID);
+        txtCityAndCountryL.setText(String.format("%s, %s", weatherEntity.getCity(), new CountryCodes().getCountryCode(weatherEntity.getCountry())));
         txtLastUpdateL.setText(String.format("Last Updated: %s", weatherEntity.getLastUpdate()));
         txtDescriptionL.setText(String.format("%s", weatherEntity.getDescription()));
         txtHumidityL.setText(String.format("Humidity: %d%%", weatherEntity.getHumidity()));
@@ -103,7 +125,6 @@ public class LookWeatherActivity extends AppCompatActivity {
     }
 
     public void handleLocation(){
-        dialog = setProgressDialog();
         txtConnectionL = (TextView) findViewById(R.id.txtConnectionL);
         txtConnectionL.setText("");
         txtCityAndCountryL = (TextView) findViewById(R.id.txtCityAndCountryL);
@@ -112,7 +133,7 @@ public class LookWeatherActivity extends AppCompatActivity {
         txtHumidityL = (TextView) findViewById(R.id.txtHumidityL);
         txtTimeL = (TextView) findViewById(R.id.txtTimeL);
         txtCelsiusL = (TextView) findViewById(R.id.txtCelsiusL);
-       // imageViewL = (ImageView) findViewById(R.id.imageViewL);
+        imageViewL = (ImageView) findViewById(R.id.imageViewL);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(LookWeatherActivity.this, new String[]{
@@ -129,11 +150,13 @@ public class LookWeatherActivity extends AppCompatActivity {
         int id = 0;
         int stringID = intent.getIntExtra("WeatherID", id);
 
-        WeatherEntity weatherEntity = MainActivity.appDatabase.weatherDao().getWeather(stringID);
+        updateWeatherID = stringID;
+
+        WeatherEntity weatherEntity = MainActivity.appDatabase.weatherDao().getWeather(updateWeatherID);
         new GetWeather().execute(Common.apiRequest(weatherEntity.getCity(), weatherEntity.getCountry()));
     }
 
-    private AlertDialog setProgressDialog() {
+    AlertDialog setProgressDialog() {
 
         int llPadding = 30;
         LinearLayout ll = new LinearLayout(this);
@@ -180,15 +203,13 @@ public class LookWeatherActivity extends AppCompatActivity {
         return dialog;
     }
 
-    private class GetWeather extends AsyncTask<String, Void, String> {
-
+    class GetWeather extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
+            dialog = setProgressDialog();
             if(!isNetworkConnection()){
                 txtConnectionL.setText("Check your network connection");
-                dialog.dismiss();
                 return;
             }
         }
@@ -234,15 +255,17 @@ public class LookWeatherActivity extends AppCompatActivity {
                     Common.unixTimeStampToDateTime(sunrise),
                     Common.unixTimeStampToDateTime(sunset)));
             txtCelsiusL.setText(String.format("Temperature: %.2f °C", temp));
-            /*Picasso.get()
+            Picasso.get()
                     .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
-                    .into(imageViewL);*/
-
-           // DatabaseHelper db = new DatabaseHelper(LookWeatherActivity.this);
+                    .into(imageViewL);
 
             country = new CountryCodes().getCountryName(country);
 
+            updateCity = city;
+            updateCountry = country;
+
             WeatherEntity weather = new WeatherEntity(
+                    updateWeatherID,
                     country,
                     city,
                     description,
@@ -253,23 +276,40 @@ public class LookWeatherActivity extends AppCompatActivity {
                     temp,
                     sunrise,
                     sunset);
-
-            List<WeatherEntity> list = MainActivity.appDatabase.weatherDao().getWeathers();
-            boolean check = false;
-            for(WeatherEntity weatherE : list){
-                if(weatherE.getCountry().equals(country)
-                        &&
-                        weatherE.getCity().equals(city)) {
-                    weather.setWeatherID(weatherE.getWeatherID());
-                    MainActivity.appDatabase.weatherDao().updateWeather(weather);
-                    check = true;
-                    break;
-                }
-            }
-            if(!check)
-                MainActivity.appDatabase.weatherDao().addWeather(weather);
+            MainActivity.appDatabase.weatherDao().updateWeather(weather);
             dialog.dismiss();
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.look_weather_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.update_look:
+                intent = new Intent(getApplicationContext(), LookWeatherActivity.class);
+                intent.putExtra("WeatherID", updateWeatherID);
+                intent.putExtra("Update", "yes");
+                startActivity(intent);
+                break;
+            case R.id.delete_look:
+                MainActivity.appDatabase.weatherDao().deleteWeatherByID(updateWeatherID);
+                Toast.makeText(this, "Weather was deleted", Toast.LENGTH_SHORT).show();
+                Log.i("Delete", "Weather was deleted");
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.show_more_details_look:
+                intent = new Intent(getApplicationContext(), ShowDetailsActivity.class);
+                intent.putExtra("WeatherID", updateWeatherID);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -39,6 +39,13 @@
         android:gravity="center"
         />
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/imageViewL"
+        android:layout_gravity="center"
+        android:contentDescription="TODO" />
+
     <TextView
         android:id="@+id/txtDescriptionL"
         android:layout_width="match_parent"

@@ -175,7 +175,7 @@ public class FindWeatherActivity extends AppCompatActivity{
             Helper http = new Helper();
             String stream = http.getHTTPData(urlString);
             if(stream == null){
-                txtConnectionF.setText("Something went wrong, try again.");
+                txtConnectionF.setText("Something went wrong. Check city and country.");
                 return "NULL_VALUE";
             }
 

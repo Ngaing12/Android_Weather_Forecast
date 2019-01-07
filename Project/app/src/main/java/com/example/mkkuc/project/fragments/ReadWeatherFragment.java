@@ -73,10 +73,6 @@ public class ReadWeatherFragment extends Fragment{
 
         for (WeatherEntity weatherEntity : list) {
             ItemModel itemModel = new ItemModel(weatherEntity);
-            if(itemModel.getWeatherEntity().getDescription() == null){
-                MainActivity.appDatabase.weatherDao().deleteWeatherByID(itemModel.getWeatherEntity().getWeatherID());
-                continue;
-            }
             itemList.add(itemModel);
         }
 
@@ -132,28 +128,43 @@ public class ReadWeatherFragment extends Fragment{
                     listAdapter = new ItemAdapter(getActivity(), itemList);
                     mainListView.setAdapter(listAdapter);
 
-                    Toast.makeText(getActivity(), "Selected were deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Deleting completed", Toast.LENGTH_SHORT).show();
                     Log.i("SelectedDeleted", "Selected were deleted");
 
                 }
-                else
+                else{
                     Toast.makeText(getActivity(), "Select something", Toast.LENGTH_SHORT).show();
+                    Log.i("NothingSelected", "Nothing selected");
+                }
+
                 dialog.dismiss();
                 return true;
 
             case R.id.delete_all:
                 dialog = setProgressDialog();
+                if(itemList.isEmpty()){
+                    Toast.makeText(getActivity(), "You have nothing on the list", Toast.LENGTH_SHORT).show();
+                    Log.i("NothingOnTheList", "You have nothing on the list");
+                    dialog.dismiss();
+                    return true;
+                }
                 MainActivity.appDatabase.weatherDao().deleteAllWeathers();
                 itemList.clear();
                 listAdapter = new ItemAdapter(getActivity(), itemList);
                 mainListView.setAdapter(listAdapter);
                 dialog.dismiss();
                 Toast.makeText(getActivity(), "All was deleted", Toast.LENGTH_SHORT).show();
-                Log.i("AllDeleted", "All was deleted");
+                Log.i("AllDeleted", "Deleting completed");
                 return true;
 
             case R.id.update_all:
                 dialog = setProgressDialog();
+                if(itemList.isEmpty()){
+                    Toast.makeText(getActivity(), "You have nothing on the list", Toast.LENGTH_SHORT).show();
+                    Log.i("NothingOnTheList", "You have nothing on the list");
+                    dialog.dismiss();
+                    return true;
+                }
                 updateDatabase(itemList);
                 list = MainActivity.appDatabase.weatherDao().getWeathers();
                 itemList.clear();
@@ -168,8 +179,8 @@ public class ReadWeatherFragment extends Fragment{
                 listAdapter = new ItemAdapter(getActivity(), itemList);
                 mainListView.setAdapter(listAdapter);
                 dialog.dismiss();
-                Toast.makeText(getActivity(), "All was updated", Toast.LENGTH_SHORT).show();
-                Log.i("Updated", "All was updated");
+                Toast.makeText(getActivity(), "Updating completed", Toast.LENGTH_SHORT).show();
+                Log.i("Updated", "Updating completed");
                 return true;
         }
 
@@ -258,6 +269,9 @@ public class ReadWeatherFragment extends Fragment{
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            if(s == null)
+                return;
 
             Gson gson = new Gson();
             Type mType = new TypeToken<OpenWeatherMap>() {

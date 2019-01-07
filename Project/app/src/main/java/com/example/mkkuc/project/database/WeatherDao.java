@@ -18,7 +18,7 @@ public interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void addListOfWeathers(List<WeatherEntity> weather);
 
-    @Query("SELECT * FROM weathers ORDER BY city, country")
+    @Query("SELECT * FROM weathers ORDER BY country, city")
     List<WeatherEntity> getWeathers();
 
     @Query("SELECT * FROM weathers WHERE weatherID = :id")

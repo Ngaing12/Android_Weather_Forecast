@@ -10,9 +10,17 @@ public class CountryCodes {
 
     public boolean isCountry(String country){
         for (String c : _countryNames){
-            if(c == country)
+            if(c.equals(country))
                 return true;
-        };
+        }
+        return false;
+    }
+
+    public boolean isCode(String code){
+        for (String c : _countryCodes){
+            if(c.equals(code))
+                return true;
+        }
         return false;
     }
 
