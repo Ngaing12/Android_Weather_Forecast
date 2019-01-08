@@ -134,7 +134,7 @@ public class FindWeatherActivity extends AppCompatActivity {
             super.onPreExecute();
 
             if (!isNetworkConnection()) {
-                txtConnectionF.setText("Check your network connection");
+                txtConnectionF.setText(R.string.check_connection);
                 dialog.dismiss();
                 return;
             }
@@ -165,75 +165,68 @@ public class FindWeatherActivity extends AppCompatActivity {
 
                 String country = openWeatherMap.getSys().getCountry();
                 String city = openWeatherMap.getCity();
+                String description = openWeatherMap.getWeather().get(0).getDescription();
 
-/*                if (!cityFind.equals(city)) {
-                    txtConnectionF.setText(R.string.something_went_wrong);
-                    dialog.dismiss();
-                }
-                else {*/
-                    String description = openWeatherMap.getWeather().get(0).getDescription();
+                description = new FixDescription().fixDescription(description);
 
-                    description = new FixDescription().fixDescription(description);
+                String lastUpdate = Common.getDateNow();
+                int humidity = openWeatherMap.getMain().getHumidity();
+                double temp = openWeatherMap.getMain().getTemp();
+                double sunrise = openWeatherMap.getSys().getSunrise();
+                double sunset = openWeatherMap.getSys().getSunset();
+                lat = openWeatherMap.getCoord().getLat();
+                lon = openWeatherMap.getCoord().getLon();
 
-                    String lastUpdate = Common.getDateNow();
-                    int humidity = openWeatherMap.getMain().getHumidity();
-                    double temp = openWeatherMap.getMain().getTemp();
-                    double sunrise = openWeatherMap.getSys().getSunrise();
-                    double sunset = openWeatherMap.getSys().getSunset();
-                    lat = openWeatherMap.getCoord().getLat();
-                    lon = openWeatherMap.getCoord().getLon();
+                txtCityAndCountryF.setText(String.format("%s, %s", city, country));
 
-                    txtCityAndCountryF.setText(String.format("%s, %s", city, country));
+                txtLastUpdateF.setText(String.format("%s: %s",
+                        resources.getString(R.string.last_update),
+                        lastUpdate));
+                txtDescriptionF.setText(String.format("%s", description));
+                txtHumidityF.setText(String.format("%s: %d%%",
+                        resources.getString(R.string.humidity),
+                        humidity));
+                txtTimeF.setText(String.format("%s: %s \n%s: %s",
+                        resources.getString(R.string.sunrise),
+                        Common.unixTimeStampToDateTime(sunrise),
+                        resources.getString(R.string.sunset),
+                        Common.unixTimeStampToDateTime(sunset)));
+                txtCelsiusF.setText(String.format("%s: %.2f °C",
+                        resources.getString(R.string.temperature),
+                        temp));
+                Picasso.get()
+                        .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
+                        .into(imageViewF);
 
-                    txtLastUpdateF.setText(String.format("%s: %s",
-                            resources.getString(R.string.last_update),
-                            lastUpdate));
-                    txtDescriptionF.setText(String.format("%s", description));
-                    txtHumidityF.setText(String.format("%s: %d%%",
-                            resources.getString(R.string.humidity),
-                            humidity));
-                    txtTimeF.setText(String.format("%s: %s \n%s: %s",
-                            resources.getString(R.string.sunrise),
-                            Common.unixTimeStampToDateTime(sunrise),
-                            resources.getString(R.string.sunset),
-                            Common.unixTimeStampToDateTime(sunset)));
-                    txtCelsiusF.setText(String.format("%s: %.2f °C",
-                            resources.getString(R.string.temperature),
-                            temp));
-                    Picasso.get()
-                            .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
-                            .into(imageViewF);
+                country = new CountryCodes().getCountryName(country);
 
-                    country = new CountryCodes().getCountryName(country);
-
-                    WeatherEntity weather = new WeatherEntity(
-                            country,
-                            city,
-                            description,
-                            lastUpdate,
-                            humidity,
-                            lat,
-                            lon,
-                            temp,
-                            sunrise,
-                            sunset);
-                    List<WeatherEntity> list = MainActivity.appDatabase.weatherDao().getWeathers();
-                    boolean check = false;
-                    for (WeatherEntity weatherE : list) {
-                        if (weatherE.getCountry().equals(country)
-                                &&
-                                weatherE.getCity().equals(city)) {
-                            weather.setWeatherID(weatherE.getWeatherID());
-                            MainActivity.appDatabase.weatherDao().updateWeather(weather);
-                            check = true;
-                            break;
-                        }
+                WeatherEntity weather = new WeatherEntity(
+                        country,
+                        city,
+                        description,
+                        lastUpdate,
+                        humidity,
+                        lat,
+                        lon,
+                        temp,
+                        sunrise,
+                        sunset);
+                List<WeatherEntity> list = MainActivity.appDatabase.weatherDao().getWeathers();
+                boolean check = false;
+                for (WeatherEntity weatherE : list) {
+                    if (weatherE.getCountry().equals(country)
+                            &&
+                            weatherE.getCity().equals(city)) {
+                        weather.setWeatherID(weatherE.getWeatherID());
+                        MainActivity.appDatabase.weatherDao().updateWeather(weather);
+                        check = true;
+                        break;
                     }
-                    if (!check)
-                        MainActivity.appDatabase.weatherDao().addWeather(weather);
-                    dialog.dismiss();
                 }
-
+                if (!check)
+                    MainActivity.appDatabase.weatherDao().addWeather(weather);
+                dialog.dismiss();
+            }
         }
     }
 

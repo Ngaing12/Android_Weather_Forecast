@@ -140,7 +140,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
             super.onPreExecute();
 
             if(!isNetworkConnection()){
-                txtConnectionShow.setText("Check your network connection");
+                txtConnectionShow.setText(R.string.check_connection);
                 dialog.dismiss();
                 return;
             }

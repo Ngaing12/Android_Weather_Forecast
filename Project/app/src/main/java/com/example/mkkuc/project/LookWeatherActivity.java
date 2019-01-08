@@ -144,7 +144,8 @@ public class LookWeatherActivity extends AppCompatActivity {
             super.onPreExecute();
 
             if(!isNetworkConnection()){
-                txtConnectionL.setText("Check your network connection");
+                Resources resources = getResources();
+                txtConnectionL.setText(resources.getString(R.string.check_connection));
                 return;
             }
         }
@@ -170,7 +171,7 @@ public class LookWeatherActivity extends AppCompatActivity {
             Gson gson = new Gson();
             Type mType = new TypeToken<OpenWeatherMap>(){}.getType();
             openWeatherMap = gson.fromJson(s,mType);
-            Resources resources = getResources();
+
             String country = openWeatherMap.getSys().getCountry();
             String city = openWeatherMap.getCity();
             String description = openWeatherMap.getWeather().get(0).getDescription();
@@ -186,7 +187,7 @@ public class LookWeatherActivity extends AppCompatActivity {
             lon = openWeatherMap.getCoord().getLon();
 
             txtCityAndCountryL.setText(String.format("%s, %s", city, country));
-
+            Resources resources = getResources();
             txtLastUpdateL.setText(String.format("%s: %s",
                     resources.getString(R.string.last_update),
                     lastUpdate));

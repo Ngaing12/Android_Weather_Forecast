@@ -41,5 +41,5 @@
     <string name="update_all">Zaktualizuj wszystkie</string>
     <string name="delete_all">Usuń wszystkie</string>
     <string name="delete_selected">Usuń wybrane</string>
-
+    <string name="check_connection">Sprawdź połączenie z Internetem</string>
 </resources>

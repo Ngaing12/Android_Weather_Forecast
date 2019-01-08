@@ -1,9 +1,12 @@
 package com.example.mkkuc.project.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -162,6 +165,10 @@ public class ReadWeatherFragment extends Fragment{
                 return true;
 
             case R.id.update_all:
+                if(!isNetworkConnection()){
+                    Toast.makeText(getActivity(), resources.getString(R.string.check_connection), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 dialog = new AlertDialogComponent(getResources()).setProgressDialog(getContext());
                 if(itemList.isEmpty()){
                     Toast.makeText(getActivity(), resources.getString(R.string.empty_list), Toast.LENGTH_SHORT).show();
@@ -259,5 +266,15 @@ public class ReadWeatherFragment extends Fragment{
                     sunset);
             MainActivity.appDatabase.weatherDao().updateWeather(weather);
         }
+    }
+
+    private boolean isNetworkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return true;
+        }
+        return false;
     }
 }

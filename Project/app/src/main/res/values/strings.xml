@@ -41,4 +41,5 @@
     <string name="update_all">Update all</string>
     <string name="delete_all">Delete all</string>
     <string name="delete_selected">Delete selected</string>
+    <string name="check_connection">Check your network connection</string>
 </resources>

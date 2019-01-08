@@ -57,7 +57,6 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
     OpenWeatherMap openWeatherMap = new OpenWeatherMap();
     Intent intent;
     int MY_PERMISSION = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,7 +131,8 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
             return;
 
         if (!isNetworkConnection()) {
-            txtConnection.setText("Check your network connection");
+            Resources resources = getResources();
+            txtConnection.setText(resources.getString(R.string.check_connection));
             return;
         }
 
@@ -159,7 +159,8 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
         }
 
         if (!isNetworkConnection()) {
-            txtConnection.setText("Check your network connection");
+            txtConnection.setText(R.string.check_connection);
+            dialog.dismiss();
             return;
         }
 
@@ -197,7 +198,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
             super.onPreExecute();
 
             if (!isNetworkConnection()) {
-                txtConnection.setText("Check your network connection");
+                txtConnection.setText(R.string.check_connection);
                 dialog.dismiss();
                 return;
             }
@@ -227,14 +228,14 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
             }.getType();
             openWeatherMap = gson.fromJson(s, mType);
 
-            Resources resources = getResources();
+
 
             String country = openWeatherMap.getSys().getCountry();
             String city = openWeatherMap.getCity();
             String description = openWeatherMap.getWeather().get(0).getDescription();
 
             description = new FixDescription().fixDescription(description);
-
+            Resources resources = getResources();
             String lastUpdate = Common.getDateNow();
             int humidity = openWeatherMap.getMain().getHumidity();
             double temp = openWeatherMap.getMain().getTemp();
