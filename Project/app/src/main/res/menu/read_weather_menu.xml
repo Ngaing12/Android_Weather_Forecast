@@ -6,16 +6,16 @@
 
     <item
         android:id="@+id/update_all"
-        android:title="Update all"
+        android:title="@string/update_all"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/delete_all"
-        android:title="Delete all"
+        android:title="@string/delete_all"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/delete_selected"
-        android:title="Delete selected"
+        android:title="@string/delete_selected"
         app:showAsAction="never" />
 </menu>

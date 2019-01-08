@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -90,7 +91,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
     }
 
     public void handleLocation() {
-        dialog = new AlertDialogComponent().setProgressDialog(this);
+        dialog = new AlertDialogComponent(getResources()).setProgressDialog(this);
         txtConnection = (TextView) findViewById(R.id.txtConnection);
         txtConnection.setText("");
         txtCityAndCountry = (TextView) findViewById(R.id.txtCityAndCountry);
@@ -226,6 +227,8 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
             }.getType();
             openWeatherMap = gson.fromJson(s, mType);
 
+            Resources resources = getResources();
+
             String country = openWeatherMap.getSys().getCountry();
             String city = openWeatherMap.getCity();
             String description = openWeatherMap.getWeather().get(0).getDescription();
@@ -239,13 +242,22 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
             double sunset = openWeatherMap.getSys().getSunset();
 
             txtCityAndCountry.setText(String.format("%s, %s", city, country));
-            txtLastUpdate.setText(String.format("Last Updated: %s", lastUpdate));
+
+            txtLastUpdate.setText(String.format("%s: %s",
+                    resources.getString(R.string.last_update),
+                    lastUpdate));
             txtDescription.setText(String.format("%s", description));
-            txtHumidity.setText(String.format("Humidity: %d%%", humidity));
-            txtTime.setText(String.format("Sunrise: %s \n Sunset: %s",
+            txtHumidity.setText(String.format("%s: %d%%",
+                    resources.getString(R.string.humidity),
+                    humidity));
+            txtTime.setText(String.format("%s: %s \n%s: %s",
+                    resources.getString(R.string.sunrise),
                     Common.unixTimeStampToDateTime(sunrise),
+                    resources.getString(R.string.sunset),
                     Common.unixTimeStampToDateTime(sunset)));
-            txtCelsius.setText(String.format("Temperature: %.2f °C", temp));
+            txtCelsius.setText(String.format("%s: %.2f °C",
+                    resources.getString(R.string.temperature),
+                    temp));
             Picasso.get()
                     .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
                     .into(imageView);
@@ -293,7 +305,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.update_current:
-                dialog = new AlertDialogComponent().setProgressDialog(this);
+                dialog = new AlertDialogComponent(getResources()).setProgressDialog(this);
                 new GetWeather().execute(Common.apiRequest(lat, lon));
                 break;
 

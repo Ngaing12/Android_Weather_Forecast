@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -33,6 +34,7 @@ import com.example.mkkuc.project.common.AlertDialogComponent;
 import com.example.mkkuc.project.common.Common;
 import com.example.mkkuc.project.common.CountryCodes;
 import com.example.mkkuc.project.common.FixDescription;
+import com.example.mkkuc.project.common.FixDoubleValue;
 import com.example.mkkuc.project.database.WeatherEntity;
 import com.example.mkkuc.project.helper.Helper;
 import com.example.mkkuc.project.model.OpenWeatherMap;
@@ -94,7 +96,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
     }
 
     public void handleLocation(){
-        dialog = new AlertDialogComponent().setProgressDialog(this);
+        dialog = new AlertDialogComponent(getResources()).setProgressDialog(this);
         txtConnectionShow = (TextView) findViewById(R.id.txtConnectionShow);
         txtConnectionShow.setText("");
         txtCityAndCountryShow = (TextView) findViewById(R.id.txtCityAndCountryShow);
@@ -123,10 +125,9 @@ public class ShowDetailsActivity extends AppCompatActivity {
             return;
         }
         intent = getIntent();
-        String l = intent.getStringExtra("lat");
-        lat = Double.parseDouble(l);
-        l = intent.getStringExtra("lon");
-        lon = Double.parseDouble(l);
+        FixDoubleValue fix = new FixDoubleValue();
+        lat = fix.fixDoubleValue(intent.getStringExtra("lat"));
+        lon = fix.fixDoubleValue(intent.getStringExtra("lon"));
 
         new GetWeather().execute(Common.apiRequest(lat, lon));
     }
@@ -167,7 +168,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
             Gson gson = new Gson();
             Type mType = new TypeToken<OpenWeatherMap>(){}.getType();
             openWeatherMap = gson.fromJson(s,mType);
-
+            Resources resources = getResources();
             String country = openWeatherMap.getSys().getCountry();
             String city = openWeatherMap.getCity();
             String description = openWeatherMap.getWeather().get(0).getDescription();
@@ -185,18 +186,48 @@ public class ShowDetailsActivity extends AppCompatActivity {
             double sunset = openWeatherMap.getSys().getSunset();
 
             txtCityAndCountryShow.setText(String.format("%s, %s", city, country));
-            txtLastUpdateShow.setText(String.format("Last Updated: %s", lastUpdate));
+
+            txtLastUpdateShow.setText(String.format("%s: %s",
+                    resources.getString(R.string.last_update),
+                    lastUpdate));
             txtDescriptionShow.setText(String.format("%s", description));
-            txtLatitudeShow.setText(String.format("Latitude: %.5f", lat));
-            txtLongitudeShow.setText(String.format("Longitude: %.5f", lon));
-            txtPressureShow.setText(String.format("Pressure: %.2f hPa", pressure));
-            txtHumidityShow.setText(String.format("Humidity: %d%%", humidity));
-            txtCelsiusShow.setText(String.format("Temperature: %.2f °C", temp));
-            txtTempMinShow.setText(String.format("Temperature min: %.2f °C", tempMin));
-            txtTempMaxShow.setText(String.format("Temperature max: %.2f °C", tempMax));
-            txtWindSpeedShow.setText(String.format("Wind speed: %.2f m/s", windSpeed));
-            txtTimeShow.setText(String.format("Sunrise: %s \n Sunset: %s",
+
+            txtLatitudeShow.setText(String.format("%s: %.5f",
+                    resources.getString(R.string.latitude),
+                    lat));
+
+            txtLongitudeShow.setText(String.format("%s: %.5f",
+                    resources.getString(R.string.longitude),
+                    lon));
+
+            txtPressureShow.setText(String.format("%s: %.2f hPa",
+                    resources.getString(R.string.pressure),
+                    pressure));
+
+            txtHumidityShow.setText(String.format("%s: %d%%",
+                    resources.getString(R.string.humidity),
+                    humidity));
+
+            txtCelsiusShow.setText(String.format("%s: %.2f °C",
+                    resources.getString(R.string.temperature),
+                    temp));
+
+            txtTempMinShow.setText(String.format("%s: %.2f °C",
+                    resources.getString(R.string.tempMin),
+                    tempMin));
+
+            txtTempMaxShow.setText(String.format("%s: %.2f °C",
+                    resources.getString(R.string.tempMax),
+                    tempMax));
+
+            txtWindSpeedShow.setText(String.format("%s: %.2f m/s",
+                    resources.getString(R.string.wind),
+                    windSpeed));
+
+            txtTimeShow.setText(String.format("%s: %s \n%s: %s",
+                    resources.getString(R.string.sunrise),
                     Common.unixTimeStampToDateTime(sunrise),
+                    resources.getString(R.string.sunset),
                     Common.unixTimeStampToDateTime(sunset)));
 
             Picasso.get()
@@ -246,7 +277,7 @@ public class ShowDetailsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.update_show:
-                dialog = new AlertDialogComponent().setProgressDialog(this);
+                dialog = new AlertDialogComponent(getResources()).setProgressDialog(this);
                 new GetWeather().execute(Common.apiRequest(lat, lon));
                 break;
         }

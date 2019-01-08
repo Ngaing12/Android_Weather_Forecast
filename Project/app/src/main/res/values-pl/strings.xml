@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Prognoza pogody</string>
+    <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+
+    <string name="find_weather">Wyszukaj pogody</string>
+
+    <string name="last_update">Ostatnia aktulizacja</string>
+    <string name="humidity">Wilgotność</string>
+    <string name="sunrise">Wschód Słońca</string>
+    <string name="sunset">Zachód Słońca</string>
+    <string name="temperature">Temperatura</string>
+    <string name="tempMin">Temperatura min.</string>
+    <string name="tempMax">Temperature max</string>
+    <string name="latitude">Szerokość geo.</string>
+    <string name="longitude">Długość geo.</string>
+    <string name="pressure">Ciśnienie</string>
+    <string name="wind">Szybkość wiatru</string>
+    <string name="weather_in_your_area">Pogoda w twojej okolicy</string>
+    <string name="view_history">Zobacz historię</string>
+    <string name="more_info">Więcej informacji</string>
+    <string name="enter_the_city">Podaj miasto</string>
+    <string name="ex_warsaw">np. Warszawa</string>
+    <string name="enter_the_country_name_or_code">Podaj kraj lub kod</string>
+    <string name="ex_poland_or_pl">np. Polska lub PL</string>
+    <string name="loading">Ładowanie...</string>
+    <string name="updating_completed">Aktualizacja zakończona</string>
+    <string name="delete_weather">Usuwanie zakończone</string>
+    <string name="select_something">Zaznacz coś</string>
+    <string name="empty_list">Lista jest pusta</string>
+    <string name="all_deleted">Wszystko zostało usunięte</string>
+    <string name="field_empty">Pole nie może być puste</string>
+    <string name="short_name">Zbyt krótka nazwa</string>
+    <string name="country_not_exist">Podane państwo nie istnieje. Proszę sprawdzić pisownie</string>
+    <string name="something_went_wrong">Coś poszło nie tak. Sprawdź nazwę miasta i kraju</string>
+    <string name="authors">Autor: Michał Kuc</string>
+    <string name="contact">Kontakt: mkkuc1@gmail.com</string>
+    <string name="update">Aktualizuj</string>
+    <string name="show_more_details">Pokaż szczegóły</string>
+    <string name="delete">Usuń</string>
+    <string name="update_all">Zaktualizuj wszystkie</string>
+    <string name="delete_all">Usuń wszystkie</string>
+    <string name="delete_selected">Usuń wybrane</string>
+
+</resources>

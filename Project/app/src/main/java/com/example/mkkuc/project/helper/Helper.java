@@ -29,6 +29,8 @@ public class Helper {
                 httpURLConnection.disconnect();
 
             }
+            else
+                stream = null;
         }
         catch (MalformedURLException e){
             e.printStackTrace();

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -82,7 +83,7 @@ public class LookWeatherActivity extends AppCompatActivity {
     }
 
     public void handleLastUpdateWeather(){
-        dialog = new AlertDialogComponent().setProgressDialog(this);
+        dialog = new AlertDialogComponent(getResources()).setProgressDialog(this);
         txtConnectionL = (TextView) findViewById(R.id.txtConnectionL);
         txtConnectionL.setText("");
         txtCityAndCountryL = (TextView) findViewById(R.id.txtCityAndCountryL);
@@ -101,17 +102,39 @@ public class LookWeatherActivity extends AppCompatActivity {
 
         WeatherEntity weatherEntity = MainActivity.appDatabase.weatherDao().getWeather(updateWeatherID);
 
+        Resources resources = getResources();
+        String country = weatherEntity.getCountry();
+        String city = weatherEntity.getCity();
+        String description = weatherEntity.getDescription();
+
+        description = new FixDescription().fixDescription(description);
+
+        String lastUpdate = Common.getDateNow();
+        int humidity = weatherEntity.getHumidity();
+        double temp = weatherEntity.getTemp();
+        double sunrise = weatherEntity.getSunrise();
+        double sunset = weatherEntity.getSunset();
         lat = weatherEntity.getLat();
         lon = weatherEntity.getLon();
 
-        txtCityAndCountryL.setText(String.format("%s, %s", weatherEntity.getCity(), new CountryCodes().getCountryCode(weatherEntity.getCountry())));
-        txtLastUpdateL.setText(String.format("Last Updated: %s", weatherEntity.getLastUpdate()));
-        txtDescriptionL.setText(String.format("%s", weatherEntity.getDescription()));
-        txtHumidityL.setText(String.format("Humidity: %d%%", weatherEntity.getHumidity()));
-        txtTimeL.setText(String.format("Sunrise: %s \n Sunset: %s",
-                Common.unixTimeStampToDateTime(weatherEntity.getSunrise()),
-                Common.unixTimeStampToDateTime(weatherEntity.getSunset())));
-        txtCelsiusL.setText(String.format("Temperature: %.2f °C", weatherEntity.getTemp()));
+        txtCityAndCountryL.setText(String.format("%s, %s", city, country));
+
+        txtLastUpdateL.setText(String.format("%s: %s",
+                resources.getString(R.string.last_update),
+                lastUpdate));
+        txtDescriptionL.setText(String.format("%s", description));
+        txtHumidityL.setText(String.format("%s: %d%%",
+                resources.getString(R.string.humidity),
+                humidity));
+        txtTimeL.setText(String.format("%s: %s \n%s: %s",
+                resources.getString(R.string.sunrise),
+                Common.unixTimeStampToDateTime(sunrise),
+                resources.getString(R.string.sunset),
+                Common.unixTimeStampToDateTime(sunset)));
+        txtCelsiusL.setText(String.format("%s: %.2f °C",
+                resources.getString(R.string.temperature),
+                temp));
+
         dialog.dismiss();
     }
 
@@ -147,7 +170,7 @@ public class LookWeatherActivity extends AppCompatActivity {
             Gson gson = new Gson();
             Type mType = new TypeToken<OpenWeatherMap>(){}.getType();
             openWeatherMap = gson.fromJson(s,mType);
-
+            Resources resources = getResources();
             String country = openWeatherMap.getSys().getCountry();
             String city = openWeatherMap.getCity();
             String description = openWeatherMap.getWeather().get(0).getDescription();
@@ -163,13 +186,22 @@ public class LookWeatherActivity extends AppCompatActivity {
             lon = openWeatherMap.getCoord().getLon();
 
             txtCityAndCountryL.setText(String.format("%s, %s", city, country));
-            txtLastUpdateL.setText(String.format("Last Updated: %s", lastUpdate));
+
+            txtLastUpdateL.setText(String.format("%s: %s",
+                    resources.getString(R.string.last_update),
+                    lastUpdate));
             txtDescriptionL.setText(String.format("%s", description));
-            txtHumidityL.setText(String.format("Humidity: %d%%", humidity));
-            txtTimeL.setText(String.format("Sunrise: %s \n Sunset: %s",
+            txtHumidityL.setText(String.format("%s: %d%%",
+                    resources.getString(R.string.humidity),
+                    humidity));
+            txtTimeL.setText(String.format("%s: %s \n%s: %s",
+                    resources.getString(R.string.sunrise),
                     Common.unixTimeStampToDateTime(sunrise),
+                    resources.getString(R.string.sunset),
                     Common.unixTimeStampToDateTime(sunset)));
-            txtCelsiusL.setText(String.format("Temperature: %.2f °C", temp));
+            txtCelsiusL.setText(String.format("%s: %.2f °C",
+                    resources.getString(R.string.temperature),
+                    temp));
             Picasso.get()
                     .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
                     .into(imageViewL);
@@ -207,12 +239,13 @@ public class LookWeatherActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.update_look:
-                dialog = new AlertDialogComponent().setProgressDialog(this);
+                dialog = new AlertDialogComponent(getResources()).setProgressDialog(this);
                 new GetWeather().execute(Common.apiRequest(lat, lon));
                 break;
             case R.id.delete_look:
                 MainActivity.appDatabase.weatherDao().deleteWeatherByID(updateWeatherID);
-                Toast.makeText(this, "Weather was deleted", Toast.LENGTH_SHORT).show();
+                Resources resources = getResources();
+                Toast.makeText(this, resources.getString(R.string.delete_weather), Toast.LENGTH_SHORT).show();
                 Log.i("Delete", "Weather was deleted");
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);

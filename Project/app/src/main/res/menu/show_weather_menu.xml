@@ -6,6 +6,6 @@
 
     <item
         android:id="@+id/update_show"
-        android:title="Update"
+        android:title="@string/update"
         app:showAsAction="never" />
 </menu>

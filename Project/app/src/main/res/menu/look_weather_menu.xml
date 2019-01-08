@@ -6,16 +6,16 @@
 
     <item
         android:id="@+id/update_look"
-        android:title="Update"
+        android:title="@string/update"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/delete_look"
-        android:title="Delete"
+        android:title="@string/delete"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/show_more_details_look"
-        android:title="Show more details"
+        android:title="@string/show_more_details"
         app:showAsAction="never" />
 </menu>

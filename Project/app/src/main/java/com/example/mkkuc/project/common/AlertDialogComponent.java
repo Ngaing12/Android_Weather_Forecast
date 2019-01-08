@@ -2,6 +2,7 @@ package com.example.mkkuc.project.common;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -11,7 +12,16 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.mkkuc.project.R;
+
 public class AlertDialogComponent {
+
+    Resources resources;
+
+    public AlertDialogComponent(Resources r){
+        resources = r;
+    }
+
     public AlertDialog setProgressDialog(Context context) {
         int llPadding = 30;
         LinearLayout ll = new LinearLayout(context);
@@ -33,7 +43,7 @@ public class AlertDialogComponent {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         llParam.gravity = Gravity.CENTER;
         TextView tvText = new TextView(context);
-        tvText.setText("Loading ...");
+        tvText.setText(resources.getString(R.string.loading));
         tvText.setTextColor(Color.parseColor("#000000"));
         tvText.setTextSize(20);
         tvText.setLayoutParams(llParam);

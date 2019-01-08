@@ -2,6 +2,7 @@ package com.example.mkkuc.project.fragments;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -110,9 +111,10 @@ public class ReadWeatherFragment extends Fragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        Resources resources = getResources();
         switch (id) {
             case R.id.delete_selected:
-                dialog = new AlertDialogComponent().setProgressDialog(getContext());
+                dialog = new AlertDialogComponent(getResources()).setProgressDialog(getContext());
                 int quantity = 0;
                 ArrayList<ItemModel> itemListCopy = (ArrayList<ItemModel>) itemList.clone();
                 List<WeatherEntity> weatherEntityList = new ArrayList<>();
@@ -130,13 +132,12 @@ public class ReadWeatherFragment extends Fragment{
                     itemList = (ArrayList<ItemModel>) itemListCopy.clone();
                     listAdapter = new ItemAdapter(getActivity(), itemList);
                     mainListView.setAdapter(listAdapter);
-
-                    Toast.makeText(getActivity(), "Deleting completed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), resources.getString(R.string.delete_weather), Toast.LENGTH_SHORT).show();
                     Log.i("SelectedDeleted", "Selected were deleted");
 
                 }
                 else{
-                    Toast.makeText(getActivity(), "Select something", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), resources.getString(R.string.select_something), Toast.LENGTH_SHORT).show();
                     Log.i("NothingSelected", "Nothing selected");
                 }
 
@@ -144,9 +145,9 @@ public class ReadWeatherFragment extends Fragment{
                 return true;
 
             case R.id.delete_all:
-                dialog = new AlertDialogComponent().setProgressDialog(getContext());
+                dialog = new AlertDialogComponent(getResources()).setProgressDialog(getContext());
                 if(itemList.isEmpty()){
-                    Toast.makeText(getActivity(), "You have nothing on the list", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), resources.getString(R.string.empty_list), Toast.LENGTH_SHORT).show();
                     Log.i("NothingOnTheList", "You have nothing on the list");
                     dialog.dismiss();
                     return true;
@@ -156,14 +157,14 @@ public class ReadWeatherFragment extends Fragment{
                 listAdapter = new ItemAdapter(getActivity(), itemList);
                 mainListView.setAdapter(listAdapter);
                 dialog.dismiss();
-                Toast.makeText(getActivity(), "All was deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), resources.getString(R.string.all_deleted), Toast.LENGTH_SHORT).show();
                 Log.i("AllDeleted", "Deleting completed");
                 return true;
 
             case R.id.update_all:
-                dialog = new AlertDialogComponent().setProgressDialog(getContext());
+                dialog = new AlertDialogComponent(getResources()).setProgressDialog(getContext());
                 if(itemList.isEmpty()){
-                    Toast.makeText(getActivity(), "You have nothing on the list", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), resources.getString(R.string.empty_list), Toast.LENGTH_SHORT).show();
                     Log.i("NothingOnTheList", "You have nothing on the list");
                     dialog.dismiss();
                     return true;
@@ -182,7 +183,7 @@ public class ReadWeatherFragment extends Fragment{
                 listAdapter = new ItemAdapter(getActivity(), itemList);
                 mainListView.setAdapter(listAdapter);
                 dialog.dismiss();
-                Toast.makeText(getActivity(), "Updating completed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), resources.getString(R.string.updating_completed), Toast.LENGTH_SHORT).show();
                 Log.i("Updated", "Updating completed");
                 return true;
         }
