@@ -108,14 +108,14 @@ public class FindWeatherFragment extends Fragment {
                     country += upper + lower;
                     i++;
                 }
-                checkCountry = true;
+               // checkCountry = true;
 
-                if (country.length() > 2)
+               /* if (country.length() > 2)
                     if (!(new CountryCodes().isCountry(country))) {
                         countryText.requestFocus();
                         countryText.setError("Country doesn't exists. Please write correctly.");
                         checkCountry = false;
-                    }
+                    }*/
 
                 if (checkCity && checkCountry) {
                     WeatherEntity weatherEntity = new WeatherEntity();

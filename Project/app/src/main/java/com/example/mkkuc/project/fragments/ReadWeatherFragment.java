@@ -30,6 +30,7 @@ import com.example.mkkuc.project.R;
 import com.example.mkkuc.project.adapter.ItemAdapter;
 import com.example.mkkuc.project.adapter.ItemModel;
 import com.example.mkkuc.project.adapter.ItemsViewHolder;
+import com.example.mkkuc.project.common.AlertDialogComponent;
 import com.example.mkkuc.project.common.Common;
 import com.example.mkkuc.project.common.CountryCodes;
 import com.example.mkkuc.project.database.WeatherEntity;
@@ -90,6 +91,8 @@ public class ReadWeatherFragment extends Fragment{
                 int weatherID = itemModel.getWeatherEntity().getWeatherID();
 
                 intent.putExtra("WeatherID", weatherID);
+                intent.putExtra("lat", itemModel.getWeatherEntity().getLat());
+                intent.putExtra("lon", itemModel.getWeatherEntity().getLon());
                 startActivity(intent);
             }
         });
@@ -109,7 +112,7 @@ public class ReadWeatherFragment extends Fragment{
         int id = item.getItemId();
         switch (id) {
             case R.id.delete_selected:
-                dialog = setProgressDialog();
+                dialog = new AlertDialogComponent().setProgressDialog(getContext());
                 int quantity = 0;
                 ArrayList<ItemModel> itemListCopy = (ArrayList<ItemModel>) itemList.clone();
                 List<WeatherEntity> weatherEntityList = new ArrayList<>();
@@ -141,7 +144,7 @@ public class ReadWeatherFragment extends Fragment{
                 return true;
 
             case R.id.delete_all:
-                dialog = setProgressDialog();
+                dialog = new AlertDialogComponent().setProgressDialog(getContext());
                 if(itemList.isEmpty()){
                     Toast.makeText(getActivity(), "You have nothing on the list", Toast.LENGTH_SHORT).show();
                     Log.i("NothingOnTheList", "You have nothing on the list");
@@ -158,7 +161,7 @@ public class ReadWeatherFragment extends Fragment{
                 return true;
 
             case R.id.update_all:
-                dialog = setProgressDialog();
+                dialog = new AlertDialogComponent().setProgressDialog(getContext());
                 if(itemList.isEmpty()){
                     Toast.makeText(getActivity(), "You have nothing on the list", Toast.LENGTH_SHORT).show();
                     Log.i("NothingOnTheList", "You have nothing on the list");
@@ -194,53 +197,6 @@ public class ReadWeatherFragment extends Fragment{
 
     public void updateWeather(int weatherID, String cityFind, String countryFind){
         new GetWeather(weatherID).execute(Common.apiRequest(cityFind, countryFind));
-    }
-
-    AlertDialog setProgressDialog() {
-
-        int llPadding = 30;
-        LinearLayout ll = new LinearLayout(getActivity());
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        ll.setPadding(llPadding, llPadding, llPadding, llPadding);
-        ll.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams llParam = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        llParam.gravity = Gravity.CENTER;
-        ll.setLayoutParams(llParam);
-
-        ProgressBar progressBar = new ProgressBar(getActivity());
-        progressBar.setIndeterminate(true);
-        progressBar.setPadding(0, 0, llPadding, 0);
-        progressBar.setLayoutParams(llParam);
-
-        llParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        llParam.gravity = Gravity.CENTER;
-        TextView tvText = new TextView(getActivity());
-        tvText.setText("Please wait ...");
-        tvText.setTextColor(Color.parseColor("#000000"));
-        tvText.setTextSize(20);
-        tvText.setLayoutParams(llParam);
-
-        ll.addView(progressBar);
-        ll.addView(tvText);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setCancelable(true);
-        builder.setView(ll);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        Window window = dialog.getWindow();
-        if (window != null) {
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-            layoutParams.copyFrom(dialog.getWindow().getAttributes());
-            layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
-            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setAttributes(layoutParams);
-        }
-        return dialog;
     }
 
     class GetWeather extends AsyncTask<String, Void, String> {
