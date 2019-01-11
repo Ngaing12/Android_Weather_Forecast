@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".fragments.HomeFragment">
 
     <Button
@@ -12,22 +13,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="90dp"
         android:layout_gravity="center"
-        android:text="Weather in your area"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        android:text="@string/weather_in_your_area" />
 
     <Button
         android:id="@+id/btn_find_weather"
         android:layout_width="195dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:text="@string/find_weather"
         android:layout_gravity="center"
-        android:text="Find Weather"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_find_current_weather"
         />
 
     <Button
@@ -35,11 +29,8 @@
         android:layout_width="195dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:text="@string/view_history"
         android:layout_gravity="center"
-        android:text="View history"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_find_weather"
         />
 
 
@@ -48,11 +39,8 @@
         android:layout_width="195dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:text="@string/more_info"
         android:layout_gravity="center"
-        android:text="Help"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_view_weathers"
         />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

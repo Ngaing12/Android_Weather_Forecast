@@ -19,9 +19,8 @@
         android:id="@+id/checkBoxA"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
+        android:paddingLeft="10dp"
         android:focusable="false">
     </CheckBox>
 

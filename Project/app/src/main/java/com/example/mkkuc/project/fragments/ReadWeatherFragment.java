@@ -1,8 +1,12 @@
 package com.example.mkkuc.project.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,6 +34,7 @@ import com.example.mkkuc.project.R;
 import com.example.mkkuc.project.adapter.ItemAdapter;
 import com.example.mkkuc.project.adapter.ItemModel;
 import com.example.mkkuc.project.adapter.ItemsViewHolder;
+import com.example.mkkuc.project.common.AlertDialogComponent;
 import com.example.mkkuc.project.common.Common;
 import com.example.mkkuc.project.common.CountryCodes;
 import com.example.mkkuc.project.database.WeatherEntity;
@@ -90,6 +95,8 @@ public class ReadWeatherFragment extends Fragment{
                 int weatherID = itemModel.getWeatherEntity().getWeatherID();
 
                 intent.putExtra("WeatherID", weatherID);
+                intent.putExtra("lat", itemModel.getWeatherEntity().getLat());
+                intent.putExtra("lon", itemModel.getWeatherEntity().getLon());
                 startActivity(intent);
             }
         });
@@ -107,9 +114,10 @@ public class ReadWeatherFragment extends Fragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        Resources resources = getResources();
         switch (id) {
             case R.id.delete_selected:
-                dialog = setProgressDialog();
+                dialog = new AlertDialogComponent(getResources()).setProgressDialog(getContext());
                 int quantity = 0;
                 ArrayList<ItemModel> itemListCopy = (ArrayList<ItemModel>) itemList.clone();
                 List<WeatherEntity> weatherEntityList = new ArrayList<>();
@@ -127,13 +135,12 @@ public class ReadWeatherFragment extends Fragment{
                     itemList = (ArrayList<ItemModel>) itemListCopy.clone();
                     listAdapter = new ItemAdapter(getActivity(), itemList);
                     mainListView.setAdapter(listAdapter);
-
-                    Toast.makeText(getActivity(), "Deleting completed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), resources.getString(R.string.delete_weather), Toast.LENGTH_SHORT).show();
                     Log.i("SelectedDeleted", "Selected were deleted");
 
                 }
                 else{
-                    Toast.makeText(getActivity(), "Select something", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), resources.getString(R.string.select_something), Toast.LENGTH_SHORT).show();
                     Log.i("NothingSelected", "Nothing selected");
                 }
 
@@ -141,9 +148,9 @@ public class ReadWeatherFragment extends Fragment{
                 return true;
 
             case R.id.delete_all:
-                dialog = setProgressDialog();
+                dialog = new AlertDialogComponent(getResources()).setProgressDialog(getContext());
                 if(itemList.isEmpty()){
-                    Toast.makeText(getActivity(), "You have nothing on the list", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), resources.getString(R.string.empty_list), Toast.LENGTH_SHORT).show();
                     Log.i("NothingOnTheList", "You have nothing on the list");
                     dialog.dismiss();
                     return true;
@@ -153,14 +160,18 @@ public class ReadWeatherFragment extends Fragment{
                 listAdapter = new ItemAdapter(getActivity(), itemList);
                 mainListView.setAdapter(listAdapter);
                 dialog.dismiss();
-                Toast.makeText(getActivity(), "All was deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), resources.getString(R.string.all_deleted), Toast.LENGTH_SHORT).show();
                 Log.i("AllDeleted", "Deleting completed");
                 return true;
 
             case R.id.update_all:
-                dialog = setProgressDialog();
+                if(!isNetworkConnection()){
+                    Toast.makeText(getActivity(), resources.getString(R.string.check_connection), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                dialog = new AlertDialogComponent(getResources()).setProgressDialog(getContext());
                 if(itemList.isEmpty()){
-                    Toast.makeText(getActivity(), "You have nothing on the list", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), resources.getString(R.string.empty_list), Toast.LENGTH_SHORT).show();
                     Log.i("NothingOnTheList", "You have nothing on the list");
                     dialog.dismiss();
                     return true;
@@ -179,7 +190,7 @@ public class ReadWeatherFragment extends Fragment{
                 listAdapter = new ItemAdapter(getActivity(), itemList);
                 mainListView.setAdapter(listAdapter);
                 dialog.dismiss();
-                Toast.makeText(getActivity(), "Updating completed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), resources.getString(R.string.updating_completed), Toast.LENGTH_SHORT).show();
                 Log.i("Updated", "Updating completed");
                 return true;
         }
@@ -194,53 +205,6 @@ public class ReadWeatherFragment extends Fragment{
 
     public void updateWeather(int weatherID, String cityFind, String countryFind){
         new GetWeather(weatherID).execute(Common.apiRequest(cityFind, countryFind));
-    }
-
-    AlertDialog setProgressDialog() {
-
-        int llPadding = 30;
-        LinearLayout ll = new LinearLayout(getActivity());
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        ll.setPadding(llPadding, llPadding, llPadding, llPadding);
-        ll.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams llParam = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        llParam.gravity = Gravity.CENTER;
-        ll.setLayoutParams(llParam);
-
-        ProgressBar progressBar = new ProgressBar(getActivity());
-        progressBar.setIndeterminate(true);
-        progressBar.setPadding(0, 0, llPadding, 0);
-        progressBar.setLayoutParams(llParam);
-
-        llParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        llParam.gravity = Gravity.CENTER;
-        TextView tvText = new TextView(getActivity());
-        tvText.setText("Please wait ...");
-        tvText.setTextColor(Color.parseColor("#000000"));
-        tvText.setTextSize(20);
-        tvText.setLayoutParams(llParam);
-
-        ll.addView(progressBar);
-        ll.addView(tvText);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setCancelable(true);
-        builder.setView(ll);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        Window window = dialog.getWindow();
-        if (window != null) {
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-            layoutParams.copyFrom(dialog.getWindow().getAttributes());
-            layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
-            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            dialog.getWindow().setAttributes(layoutParams);
-        }
-        return dialog;
     }
 
     class GetWeather extends AsyncTask<String, Void, String> {
@@ -302,5 +266,15 @@ public class ReadWeatherFragment extends Fragment{
                     sunset);
             MainActivity.appDatabase.weatherDao().updateWeather(weather);
         }
+    }
+
+    private boolean isNetworkConnection() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            return true;
+        }
+        return false;
     }
 }

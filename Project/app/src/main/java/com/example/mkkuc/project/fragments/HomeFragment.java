@@ -18,7 +18,7 @@ import com.example.mkkuc.project.R;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    Button btnFindWeather, btnReadWeather, btnDeleteWeather, btnUpdateWeather, btnCurrentWeather;
+    Button btnFindWeather, btnReadWeather, btnHelp, btnCurrentWeather;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -38,6 +38,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         btnCurrentWeather = view.findViewById(R.id.btn_find_current_weather);
         btnCurrentWeather.setOnClickListener(this);
+
+        btnHelp = view.findViewById(R.id.btn_help);
+        btnHelp.setOnClickListener(this);
 
         return view;
     }
@@ -62,6 +65,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_find_current_weather:
                 Intent intent = new Intent(getActivity(), CurrentWeatherActivity.class);
                 startActivity(intent);
+                break;
+
+            case R.id.btn_help:
+                MainActivity.fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, new HelpFragment())
+                        .addToBackStack(null)
+                        .commit();
                 break;
         }
     }
