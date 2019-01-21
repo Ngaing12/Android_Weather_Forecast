@@ -62,11 +62,14 @@ public class FindWeatherActivity extends AppCompatActivity {
     Intent intent;
 
     int MY_PERMISSION = 0;
+    LinearLayout layout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_weather);
+        layout = (LinearLayout) findViewById(R.id.find_w);
         handleLocation();
     }
 
@@ -177,8 +180,57 @@ public class FindWeatherActivity extends AppCompatActivity {
                 lat = openWeatherMap.getCoord().getLat();
                 lon = openWeatherMap.getCoord().getLon();
 
-                txtCityAndCountryF.setText(String.format("%s, %s", city, country));
 
+                String timeNow = Common.getTimeNow();
+                String startTimeParse[] = timeNow.split(":");
+                String sunriseTime[] = Common.unixTimeStampToDateTime(sunrise).split(":");
+                int nowHour = Integer.parseInt(startTimeParse[0]);
+                int nowMinute = Integer.parseInt(startTimeParse[1]);
+                int sunriseHour = Integer.parseInt(sunriseTime[0]);
+                int sunriseMinute = Integer.parseInt(sunriseTime[1]);
+                int hourResultRise = sunriseHour - nowHour;
+                int minutesResultRise = sunriseMinute - nowMinute;
+
+                int color = Color.BLACK;
+                String sunsetTime[] = Common.unixTimeStampToDateTime(sunset).split(":");
+                int sunsetHour = Integer.parseInt(sunriseTime[0]);
+                int sunsetMinute = Integer.parseInt(sunriseTime[1]);
+                int hourResultSet = sunriseHour - nowHour;
+                int minutesResultSet = sunriseMinute - nowMinute;
+
+                boolean isDay = false;
+                if(hourResultRise < 0)
+                    if(hourResultSet > 0)
+                        isDay = true;
+                    else if (hourResultSet == 0 && minutesResultSet >= 0)
+                        isDay = true;
+                    else if (hourResultRise == 0 && minutesResultRise <= 0)
+                        isDay = true;
+
+                if(isDay)
+                {
+                    if(description.contains("snow") || description.contains("Snow"))
+                        layout.setBackgroundResource(R.drawable.winter);
+                    else
+                        layout.setBackgroundResource(R.drawable.day);
+                }
+                else
+                {
+                    color = Color.WHITE;
+                    if(description.contains("snow") || description.contains("Snow"))
+                        layout.setBackgroundResource(R.drawable.winter_night);
+                    else
+                        layout.setBackgroundResource(R.drawable.night);
+                }
+
+                txtCityAndCountryF.setTextColor(color);
+                txtLastUpdateF.setTextColor(color);
+                txtDescriptionF.setTextColor(color);
+                txtHumidityF.setTextColor(color);
+                txtTimeF.setTextColor(color);
+                txtCelsiusF.setTextColor(color);
+
+                txtCityAndCountryF.setText(String.format("%s, %s", city, country));
                 txtLastUpdateF.setText(String.format("%s: %s",
                         resources.getString(R.string.last_update),
                         lastUpdate));

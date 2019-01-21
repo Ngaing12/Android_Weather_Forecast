@@ -18,18 +18,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mkkuc.project.common.AlertDialogComponent;
 import com.example.mkkuc.project.common.Common;
@@ -44,7 +38,12 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+
 
 public class CurrentWeatherActivity extends AppCompatActivity implements LocationListener {
 
@@ -57,11 +56,14 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
     OpenWeatherMap openWeatherMap = new OpenWeatherMap();
     Intent intent;
     int MY_PERMISSION = 0;
+    LinearLayout layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.current_weather);
+        layout = (LinearLayout) findViewById(R.id.current_w);
         handleLocation();
+
     }
 
     private boolean arePermissions() {
@@ -236,14 +238,61 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
 
             description = new FixDescription().fixDescription(description);
             Resources resources = getResources();
+
             String lastUpdate = Common.getDateNow();
             int humidity = openWeatherMap.getMain().getHumidity();
             double temp = openWeatherMap.getMain().getTemp();
             double sunrise = openWeatherMap.getSys().getSunrise();
             double sunset = openWeatherMap.getSys().getSunset();
 
-            txtCityAndCountry.setText(String.format("%s, %s", city, country));
+            String timeNow = Common.getTimeNow();
+            String startTimeParse[] = timeNow.split(":");
+            String sunriseTime[] = Common.unixTimeStampToDateTime(sunrise).split(":");
+            int nowHour = Integer.parseInt(startTimeParse[0]);
+            int nowMinute = Integer.parseInt(startTimeParse[1]);
+            int sunriseHour = Integer.parseInt(sunriseTime[0]);
+            int sunriseMinute = Integer.parseInt(sunriseTime[1]);
+            int hourResultRise = sunriseHour - nowHour;
+            int minutesResultRise = sunriseMinute - nowMinute;
 
+            String sunsetTime[] = Common.unixTimeStampToDateTime(sunset).split(":");
+            int sunsetHour = Integer.parseInt(sunriseTime[0]);
+            int sunsetMinute = Integer.parseInt(sunriseTime[1]);
+            int hourResultSet = sunriseHour - nowHour;
+           int minutesResultSet = sunriseMinute - nowMinute;
+
+            int color = Color.BLACK;
+            boolean isDay = false;
+            if(hourResultRise < 0)
+                if(hourResultSet > 0)
+                    isDay = true;
+                else if (hourResultSet == 0 && minutesResultSet >= 0)
+                    isDay = true;
+            else if (hourResultRise == 0 && minutesResultRise <= 0)
+                    isDay = true;
+
+            if(isDay)
+            {
+                if(description.contains("snow") || description.contains("Snow"))
+                    layout.setBackgroundResource(R.drawable.winter);
+                else
+                    layout.setBackgroundResource(R.drawable.day);
+            }
+            else
+            {
+                color = Color.WHITE;
+                if(description.contains("snow") || description.contains("Snow"))
+                    layout.setBackgroundResource(R.drawable.winter_night);
+                else
+                    layout.setBackgroundResource(R.drawable.night);
+            }
+            txtCityAndCountry.setTextColor(color);
+            txtLastUpdate.setTextColor(color);
+            txtDescription.setTextColor(color);
+            txtHumidity.setTextColor(color);
+            txtTime.setTextColor(color);
+            txtCelsius.setTextColor(color);
+            txtCityAndCountry.setText(String.format("%s, %s", city, country));
             txtLastUpdate.setText(String.format("%s: %s",
                     resources.getString(R.string.last_update),
                     lastUpdate));

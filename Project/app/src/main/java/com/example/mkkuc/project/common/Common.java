@@ -52,4 +52,10 @@ public class Common {//f6d8334b80a7514b31b9ad96d4a10d57
         Date date = new Date();
         return dateFormat.format(date);
     }
+
+    public static String getTimeNow(){
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 }
