@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:id="@+id/current_w"
     tools:context=".CurrentWeatherActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1" >
 
     <TextView
         android:id="@+id/txtConnection"
@@ -16,79 +17,67 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:gravity="center"
         />
-
     <TextView
         android:id="@+id/txtCityAndCountry"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
-        android:textSize="36sp"
-        android:gravity="center"
+        android:textSize="17sp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true"
         />
 
     <TextView
         android:id="@+id/txtLastUpdate"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
         android:textSize="18sp"
-        android:gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
         />
-
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/imageView"
-        android:layout_gravity="center"
+        android:layout_gravity="right"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="40dp"
+        android:layout_alignParentRight="true"
         android:contentDescription="TODO" />
 
     <TextView
         android:id="@+id/txtDescription"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="110dp"
+        android:layout_marginRight="17dp"
+        android:layout_gravity="right"
         android:text=""
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:gravity="center"
-        />
-
-    <TextView
-        android:id="@+id/txtHumidity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:gravity="center"
-        />
-
-    <TextView
-        android:id="@+id/txtTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textStyle="bold"
-        android:textSize="30sp"
-        android:gravity="center"
-        />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txtCelsius"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
-        android:textSize="30sp"
-        android:gravity="center"
+        android:textSize="45sp"
+        android:layout_gravity="left"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="100dp"
         />
 
-</LinearLayout>
+</RelativeLayout>
 
 
 

@@ -1,80 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/background2"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragments.FindWeatherFragment"
+    >
         <TextView
             android:id="@+id/cityTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="76dp"
-            android:hint="@string/enter_the_city"
+            android:layout_marginTop="80dp"
+            android:layout_marginLeft="30dp"
+            android:text="@string/enter_the_city"
+            android:textColor="#0F0F0F"
             android:textSize="17dp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/textCity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginTop="110dp"
+            android:layout_marginLeft="30dp"
             android:ems="15"
-            android:hint="@string/ex_warsaw"
             android:imeOptions="actionNext"
             android:singleLine="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.511"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cityTextView" />
+            android:hint="@string/ex_warsaw"
+            android:textColor="#0F0F0F"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/countryTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:hint="@string/enter_the_country_name_or_code"
+            android:layout_marginTop="170dp"
+            android:layout_marginLeft="30dp"
+            android:text="@string/enter_the_country_name_or_code"
+            android:textColor="#0F0F0F"
             android:textSize="17dp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textCity"
             tools:ignore="MissingConstraints" />
 
-        <EditText
-            android:id="@+id/textCountry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:ems="15"
-            android:hint="@string/ex_poland_or_pl"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/countryTextView" />
+    <EditText
+        android:id="@+id/textCountry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:layout_marginLeft="30dp"
+        android:ems="15"
+        android:hint="@string/ex_poland_or_pl"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:textColor="#0F0F0F"
+        android:textStyle="bold" />
 
         <Button
             android:id="@+id/btn_do_find_weather"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="70dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginBottom="20dp"
             android:layout_marginEnd="8dp"
+            android:background="@drawable/button"
             android:text="@string/find_weather"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textCountry" />
-    </android.support.constraint.ConstraintLayout>
-</ScrollView>
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            />
+</RelativeLayout>

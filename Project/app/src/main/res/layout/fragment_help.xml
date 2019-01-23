@@ -3,21 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background2"
     tools:context=".fragments.HelpFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="100dp"
         android:textSize="20dp"
         android:textStyle="bold"
         android:text="@string/authors" />
 
     <TextView
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:paddingTop="50dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginLeft="50dp"
         android:text="@string/contact"
         android:textSize="20dp"
         android:textStyle="bold" />

@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,14 +63,14 @@ public class FindWeatherActivity extends AppCompatActivity {
     Intent intent;
 
     int MY_PERMISSION = 0;
-    LinearLayout layout;
+    RelativeLayout layout;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_weather);
-        layout = (LinearLayout) findViewById(R.id.find_w);
+        layout = (RelativeLayout) findViewById(R.id.find_w);
         handleLocation();
     }
 
@@ -105,8 +106,8 @@ public class FindWeatherActivity extends AppCompatActivity {
         txtCityAndCountryF = (TextView) findViewById(R.id.txtCityAndCountryF);
         txtLastUpdateF = (TextView) findViewById(R.id.txtLastUpdateF);
         txtDescriptionF = (TextView) findViewById(R.id.txtDescriptionF);
-        txtHumidityF = (TextView) findViewById(R.id.txtHumidityF);
-        txtTimeF = (TextView) findViewById(R.id.txtTimeF);
+//        txtHumidityF = (TextView) findViewById(R.id.txtHumidityF);
+//        txtTimeF = (TextView) findViewById(R.id.txtTimeF);
         txtCelsiusF = (TextView) findViewById(R.id.txtCelsiusF);
         imageViewF = (ImageView) findViewById(R.id.imageViewF);
 
@@ -226,25 +227,25 @@ public class FindWeatherActivity extends AppCompatActivity {
                 txtCityAndCountryF.setTextColor(color);
                 txtLastUpdateF.setTextColor(color);
                 txtDescriptionF.setTextColor(color);
-                txtHumidityF.setTextColor(color);
-                txtTimeF.setTextColor(color);
+//                txtHumidityF.setTextColor(color);
+//                txtTimeF.setTextColor(color);
                 txtCelsiusF.setTextColor(color);
 
                 txtCityAndCountryF.setText(String.format("%s, %s", city, country));
-                txtLastUpdateF.setText(String.format("%s: %s",
-                        resources.getString(R.string.last_update),
+                txtLastUpdateF.setText(String.format("%s",//"%s: %s",
+                  //      resources.getString(R.string.last_update),
                         lastUpdate));
                 txtDescriptionF.setText(String.format("%s", description));
-                txtHumidityF.setText(String.format("%s: %d%%",
-                        resources.getString(R.string.humidity),
-                        humidity));
-                txtTimeF.setText(String.format("%s: %s \n%s: %s",
-                        resources.getString(R.string.sunrise),
-                        Common.unixTimeStampToDateTime(sunrise),
-                        resources.getString(R.string.sunset),
-                        Common.unixTimeStampToDateTime(sunset)));
-                txtCelsiusF.setText(String.format("%s: %.2f °C",
-                        resources.getString(R.string.temperature),
+//                txtHumidityF.setText(String.format("%s: %d%%",
+//                        resources.getString(R.string.humidity),
+//                        humidity));
+//                txtTimeF.setText(String.format("%s: %s \n%s: %s",
+//                        resources.getString(R.string.sunrise),
+//                        Common.unixTimeStampToDateTime(sunrise),
+//                        resources.getString(R.string.sunset),
+//                        Common.unixTimeStampToDateTime(sunset)));
+                txtCelsiusF.setText(String.format("%.2f°C",//"%s: %.2f °C",
+                   //     resources.getString(R.string.temperature),
                         temp));
                 Picasso.get()
                         .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))

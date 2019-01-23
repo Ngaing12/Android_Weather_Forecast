@@ -17,7 +17,7 @@
     <string name="pressure">Ciśnienie</string>
     <string name="wind">Szybkość wiatru</string>
     <string name="weather_in_your_area">Pogoda w twojej okolicy</string>
-    <string name="view_history">Zobacz historię</string>
+    <string name="view_history">Historia</string>
     <string name="more_info">Więcej informacji</string>
     <string name="enter_the_city">Podaj miasto</string>
     <string name="ex_warsaw">np. Warszawa</string>
@@ -42,4 +42,6 @@
     <string name="delete_all">Usuń wszystkie</string>
     <string name="delete_selected">Usuń wybrane</string>
     <string name="check_connection">Sprawdź połączenie z Internetem</string>
+    <string name="welcome_in_weather_app">Witaj w serwisie pogody!</string>
+    <string name="back_to_main">Powrót do menu</string>
 </resources>

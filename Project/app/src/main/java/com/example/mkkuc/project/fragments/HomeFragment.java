@@ -2,10 +2,14 @@ package com.example.mkkuc.project.fragments;
 
 
 import android.app.Activity;
+import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,13 +17,14 @@ import android.widget.Button;
 import com.example.mkkuc.project.CurrentWeatherActivity;
 import com.example.mkkuc.project.MainActivity;
 import com.example.mkkuc.project.R;
+import com.example.mkkuc.project.ShowDetailsActivity;
+import com.example.mkkuc.project.common.Common;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment implements View.OnClickListener {
     Button btnFindWeather, btnReadWeather, btnHelp, btnCurrentWeather;
-
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -30,17 +35,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+
         btnFindWeather = view.findViewById(R.id.btn_find_weather);
         btnFindWeather.setOnClickListener(this);
 
-        btnReadWeather = view.findViewById(R.id.btn_view_weathers);
-        btnReadWeather.setOnClickListener(this);
+//        btnReadWeather = view.findViewById(R.id.btn_view_weathers);
+//        btnReadWeather.setOnClickListener(this);
 
         btnCurrentWeather = view.findViewById(R.id.btn_find_current_weather);
         btnCurrentWeather.setOnClickListener(this);
 
-        btnHelp = view.findViewById(R.id.btn_help);
-        btnHelp.setOnClickListener(this);
+//        btnHelp = view.findViewById(R.id.btn_help);
+//        btnHelp.setOnClickListener(this);
 
         return view;
     }
@@ -55,24 +61,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         .commit();
                 break;
 
-            case R.id.btn_view_weathers:
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, new ReadWeatherFragment())
-                        .addToBackStack(null)
-                        .commit();
-                break;
+//            case R.id.btn_view_weathers:
+//                MainActivity.fragmentManager.beginTransaction()
+//                        .replace(R.id.fragment_container, new ReadWeatherFragment())
+//                        .addToBackStack(null)
+//                        .commit();
+//                break;
 
             case R.id.btn_find_current_weather:
                 Intent intent = new Intent(getActivity(), CurrentWeatherActivity.class);
                 startActivity(intent);
                 break;
 
-            case R.id.btn_help:
-                MainActivity.fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, new HelpFragment())
-                        .addToBackStack(null)
-                        .commit();
-                break;
+//            case R.id.btn_help:
+//                MainActivity.fragmentManager.beginTransaction()
+//                        .replace(R.id.fragment_container, new HelpFragment())
+//                        .addToBackStack(null)
+//                        .commit();
+//                break;
         }
     }
+
 }

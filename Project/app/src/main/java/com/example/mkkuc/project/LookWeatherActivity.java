@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +61,7 @@ public class LookWeatherActivity extends AppCompatActivity {
     String updateCity;
     String updateCountry;
 
-
+    RelativeLayout layout;
     int MY_PERMISSION = 0;
 
     @Override
@@ -69,6 +70,7 @@ public class LookWeatherActivity extends AppCompatActivity {
         setContentView(R.layout.look_weather);
         Intent intent = getIntent();
         String update = intent.getStringExtra("Update");
+        layout = (RelativeLayout) findViewById(R.id.look_w);
         handleLastUpdateWeather();
     }
 
@@ -89,8 +91,8 @@ public class LookWeatherActivity extends AppCompatActivity {
         txtCityAndCountryL = (TextView) findViewById(R.id.txtCityAndCountryL);
         txtLastUpdateL = (TextView) findViewById(R.id.txtLastUpdateL);
         txtDescriptionL = (TextView) findViewById(R.id.txtDescriptionL);
-        txtHumidityL = (TextView) findViewById(R.id.txtHumidityL);
-        txtTimeL = (TextView) findViewById(R.id.txtTimeL);
+//        txtHumidityL = (TextView) findViewById(R.id.txtHumidityL);
+//        txtTimeL = (TextView) findViewById(R.id.txtTimeL);
         txtCelsiusL = (TextView) findViewById(R.id.txtCelsiusL);
         imageViewL = (ImageView) findViewById(R.id.imageViewL);
 
@@ -103,7 +105,7 @@ public class LookWeatherActivity extends AppCompatActivity {
         WeatherEntity weatherEntity = MainActivity.appDatabase.weatherDao().getWeather(updateWeatherID);
 
         Resources resources = getResources();
-        String country = weatherEntity.getCountry();
+        String country = new CountryCodes().getCountryCode(weatherEntity.getCountry());
         String city = weatherEntity.getCity();
         String description = weatherEntity.getDescription();
 
@@ -117,22 +119,69 @@ public class LookWeatherActivity extends AppCompatActivity {
         lat = weatherEntity.getLat();
         lon = weatherEntity.getLon();
 
+        String timeNow = Common.getTimeNow();
+        String startTimeParse[] = timeNow.split(":");
+        String sunriseTime[] = Common.unixTimeStampToDateTime(sunrise).split(":");
+        int nowHour = Integer.parseInt(startTimeParse[0]);
+        int nowMinute = Integer.parseInt(startTimeParse[1]);
+        int sunriseHour = Integer.parseInt(sunriseTime[0]);
+        int sunriseMinute = Integer.parseInt(sunriseTime[1]);
+        int hourResultRise = sunriseHour - nowHour;
+        int minutesResultRise = sunriseMinute - nowMinute;
+
+        String sunsetTime[] = Common.unixTimeStampToDateTime(sunset).split(":");
+        int sunsetHour = Integer.parseInt(sunriseTime[0]);
+        int sunsetMinute = Integer.parseInt(sunriseTime[1]);
+        int hourResultSet = sunriseHour - nowHour;
+        int minutesResultSet = sunriseMinute - nowMinute;
+
+        int color = Color.BLACK;
+        boolean isDay = false;
+        if(hourResultRise < 0)
+            if(hourResultSet > 0)
+                isDay = true;
+            else if (hourResultSet == 0 && minutesResultSet >= 0)
+                isDay = true;
+            else if (hourResultRise == 0 && minutesResultRise <= 0)
+                isDay = true;
+
+        if(isDay)
+        {
+            if(description.contains("snow") || description.contains("Snow"))
+                layout.setBackgroundResource(R.drawable.winter);
+            else
+                layout.setBackgroundResource(R.drawable.day);
+        }
+        else
+        {
+            color = Color.WHITE;
+            if(description.contains("snow") || description.contains("Snow"))
+                layout.setBackgroundResource(R.drawable.winter_night);
+            else
+                layout.setBackgroundResource(R.drawable.night);
+        }
+
+
+        txtCityAndCountryL.setTextColor(color);
+        txtLastUpdateL.setTextColor(color);
+        txtDescriptionL.setTextColor(color);
+        txtCelsiusL.setTextColor(color);
         txtCityAndCountryL.setText(String.format("%s, %s", city, country));
 
-        txtLastUpdateL.setText(String.format("%s: %s",
-                resources.getString(R.string.last_update),
+        txtLastUpdateL.setText(String.format("%s",//"%s: %s",
+              // resources.getString(R.string.last_update),
                 lastUpdate));
         txtDescriptionL.setText(String.format("%s", description));
-        txtHumidityL.setText(String.format("%s: %d%%",
-                resources.getString(R.string.humidity),
-                humidity));
-        txtTimeL.setText(String.format("%s: %s \n%s: %s",
-                resources.getString(R.string.sunrise),
-                Common.unixTimeStampToDateTime(sunrise),
-                resources.getString(R.string.sunset),
-                Common.unixTimeStampToDateTime(sunset)));
-        txtCelsiusL.setText(String.format("%s: %.2f °C",
-                resources.getString(R.string.temperature),
+//        txtHumidityL.setText(String.format("%s: %d%%",
+//                resources.getString(R.string.humidity),
+//                humidity));
+//        txtTimeL.setText(String.format("%s: %s \n%s: %s",
+//                resources.getString(R.string.sunrise),
+//                Common.unixTimeStampToDateTime(sunrise),
+//                resources.getString(R.string.sunset),
+//                Common.unixTimeStampToDateTime(sunset)));
+        txtCelsiusL.setText(String.format("%.2f°C",//"%s: %.2f °C",
+              //  resources.getString(R.string.temperature),
                 temp));
 
         dialog.dismiss();
@@ -186,22 +235,69 @@ public class LookWeatherActivity extends AppCompatActivity {
             lat = openWeatherMap.getCoord().getLat();
             lon = openWeatherMap.getCoord().getLon();
 
+
+            String timeNow = Common.getTimeNow();
+            String startTimeParse[] = timeNow.split(":");
+            String sunriseTime[] = Common.unixTimeStampToDateTime(sunrise).split(":");
+            int nowHour = Integer.parseInt(startTimeParse[0]);
+            int nowMinute = Integer.parseInt(startTimeParse[1]);
+            int sunriseHour = Integer.parseInt(sunriseTime[0]);
+            int sunriseMinute = Integer.parseInt(sunriseTime[1]);
+            int hourResultRise = sunriseHour - nowHour;
+            int minutesResultRise = sunriseMinute - nowMinute;
+
+            String sunsetTime[] = Common.unixTimeStampToDateTime(sunset).split(":");
+            int sunsetHour = Integer.parseInt(sunriseTime[0]);
+            int sunsetMinute = Integer.parseInt(sunriseTime[1]);
+            int hourResultSet = sunriseHour - nowHour;
+            int minutesResultSet = sunriseMinute - nowMinute;
+
+            int color = Color.BLACK;
+            boolean isDay = false;
+            if(hourResultRise < 0)
+                if(hourResultSet > 0)
+                    isDay = true;
+                else if (hourResultSet == 0 && minutesResultSet >= 0)
+                    isDay = true;
+                else if (hourResultRise == 0 && minutesResultRise <= 0)
+                    isDay = true;
+
+            if(isDay)
+            {
+                if(description.contains("snow") || description.contains("Snow"))
+                    layout.setBackgroundResource(R.drawable.winter);
+                else
+                    layout.setBackgroundResource(R.drawable.day);
+            }
+            else
+            {
+                color = Color.WHITE;
+                if(description.contains("snow") || description.contains("Snow"))
+                    layout.setBackgroundResource(R.drawable.winter_night);
+                else
+                    layout.setBackgroundResource(R.drawable.night);
+            }
+            txtCityAndCountryL.setTextColor(color);
+            txtLastUpdateL.setTextColor(color);
+            txtDescriptionL.setTextColor(color);
+            txtCelsiusL.setTextColor(color);
+
             txtCityAndCountryL.setText(String.format("%s, %s", city, country));
             Resources resources = getResources();
-            txtLastUpdateL.setText(String.format("%s: %s",
-                    resources.getString(R.string.last_update),
+            txtLastUpdateL.setText(String.format("%s",//"%s: %s",
+               //     resources.getString(R.string.last_update),
                     lastUpdate));
             txtDescriptionL.setText(String.format("%s", description));
-            txtHumidityL.setText(String.format("%s: %d%%",
-                    resources.getString(R.string.humidity),
-                    humidity));
-            txtTimeL.setText(String.format("%s: %s \n%s: %s",
-                    resources.getString(R.string.sunrise),
-                    Common.unixTimeStampToDateTime(sunrise),
-                    resources.getString(R.string.sunset),
-                    Common.unixTimeStampToDateTime(sunset)));
-            txtCelsiusL.setText(String.format("%s: %.2f °C",
-                    resources.getString(R.string.temperature),
+//            txtHumidityL.setText(String.format("%s: %d%%",
+//                    resources.getString(R.string.humidity),
+//                    humidity));
+//            txtTimeL.setText(String.format("%s: %s \n%s: %s",
+//                    resources.getString(R.string.sunrise),
+//                    Common.unixTimeStampToDateTime(sunrise),
+//                    resources.getString(R.string.sunset),
+//                    Common.unixTimeStampToDateTime(sunset)));
+            txtCelsiusL.setText(String.format("%.2f°C",//"%s: %.2f °C",
+                 //   resources.getString(R.string.temperature),
                     temp));
             Picasso.get()
                     .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))

@@ -1,46 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/background2"
     tools:context=".fragments.HomeFragment">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:text="@string/welcome_in_weather_app"
+        android:textAlignment="center"
+        android:textColor="#0F0F0F"
+        android:textSize="40dp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btn_find_current_weather"
-        android:layout_width="195dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="90dp"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
-        android:text="@string/weather_in_your_area" />
+        android:text="@string/weather_in_your_area"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button"
+        />
 
     <Button
         android:id="@+id/btn_find_weather"
-        android:layout_width="195dp"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
         android:layout_marginTop="32dp"
         android:text="@string/find_weather"
-        android:layout_gravity="center"
-        />
-
-    <Button
-        android:id="@+id/btn_view_weathers"
-        android:layout_width="195dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/view_history"
-        android:layout_gravity="center"
+        android:background="@drawable/button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
         />
 
 
-    <Button
-        android:id="@+id/btn_help"
-        android:layout_width="195dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/more_info"
-        android:layout_gravity="center"
-        />
-
-</LinearLayout>
+</RelativeLayout>
