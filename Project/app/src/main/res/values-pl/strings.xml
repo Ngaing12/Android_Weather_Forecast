@@ -44,4 +44,18 @@
     <string name="check_connection">Sprawdź połączenie z Internetem</string>
     <string name="welcome_in_weather_app">Witaj w serwisie pogody!</string>
     <string name="back_to_main">Powrót do menu</string>
+    <string name="poka_prognoz_na_5_dni">Pokaż prognozę na 5 dni</string>
+
+
+    <string name="clear_sky">Czyste niebo</string>
+    <string name="few_clouds">Lekkie zachmu.</string>
+    <string name="scattered_clouds">Rozproszone chmury</string>
+    <string name="broken_clouds">Rozproszone chmury</string>
+    <string name="shower_rain">Przelotny deszcz</string>
+    <string name="rain">Deszcz</string>
+    <string name="thunderstorm">Burza</string>
+    <string name="snow">Śnieg</string>
+    <string name="light_snow">Przelotny śnieg</string>
+    <string name="mist">Mgła</string>
+
 </resources>

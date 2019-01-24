@@ -173,7 +173,36 @@ public class ShowDetailsActivity extends AppCompatActivity {
             String city = openWeatherMap.getCity();
             String description = openWeatherMap.getWeather().get(0).getDescription();
 
-            description = new FixDescription().fixDescription(description);
+            //description = new FixDescription().fixDescription(description);
+            switch(description){
+                case "clear sky":
+                    description = resources.getString(R.string.clear_sky);
+                    break;
+                case "few clouds":
+                    description = resources.getString(R.string.few_clouds);
+                    break;
+                case "scattered clouds":
+                    description = resources.getString(R.string.scattered_clouds);
+                    break;
+                case "broken clouds":
+                    description = resources.getString(R.string.broken_clouds);
+                    break;
+                case "shower rain":
+                    description = resources.getString(R.string.shower_rain);
+                    break;
+                case "rain":
+                    description = resources.getString(R.string.rain);
+                    break;
+                case "thunderstorm":
+                    description = resources.getString(R.string.thunderstorm);
+                    break;
+                case "snow":
+                    description = resources.getString(R.string.snow);
+                    break;
+                case "mist":
+                    description = resources.getString(R.string.mist);
+                    break;
+            }
 
             String lastUpdate = Common.getDateNow();
             int humidity = openWeatherMap.getMain().getHumidity();

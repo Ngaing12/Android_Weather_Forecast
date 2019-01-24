@@ -237,8 +237,37 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
             String city = openWeatherMap.getCity();
             String description = openWeatherMap.getWeather().get(0).getDescription();
 
-            description = new FixDescription().fixDescription(description);
             Resources resources = getResources();
+            switch(description){
+                case "clear sky":
+                    description = resources.getString(R.string.clear_sky);
+                    break;
+                case "few clouds":
+                    description = resources.getString(R.string.few_clouds);
+                    break;
+                case "scattered clouds":
+                    description = resources.getString(R.string.scattered_clouds);
+                    break;
+                case "broken clouds":
+                    description = resources.getString(R.string.broken_clouds);
+                    break;
+                case "shower rain":
+                    description = resources.getString(R.string.shower_rain);
+                    break;
+                case "rain":
+                    description = resources.getString(R.string.rain);
+                    break;
+                case "thunderstorm":
+                    description = resources.getString(R.string.thunderstorm);
+                    break;
+                case "snow":
+                    description = resources.getString(R.string.snow);
+                    break;
+                case "mist":
+                    description = resources.getString(R.string.mist);
+                    break;
+            }
+
 
             String lastUpdate = Common.getDateNow();
             int humidity = openWeatherMap.getMain().getHumidity();
@@ -366,6 +395,14 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Locatio
                 String _lon = String.format("%.5f", lon);
                 intent.putExtra("lat", _lat);
                 intent.putExtra("lon", _lon);
+                startActivity(intent);
+                break;
+            case R.id.forecast_view:
+                intent = new Intent(getApplicationContext(), ForecastActivity.class);
+                String _lat2 = String.format("%.5f", lat);
+                String _lon2 = String.format("%.5f", lon);
+                intent.putExtra("lat", _lat2);
+                intent.putExtra("lon", _lon2);
                 startActivity(intent);
                 break;
         }

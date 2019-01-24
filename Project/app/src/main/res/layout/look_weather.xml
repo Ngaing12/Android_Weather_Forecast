@@ -24,7 +24,7 @@
         android:id="@+id/txtCityAndCountryL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MOnki,pl"
+        android:text=""
         android:textStyle="bold"
         android:textSize="17sp"
         android:layout_marginRight="10dp"
@@ -36,7 +36,7 @@
         android:id="@+id/txtLastUpdateL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="01.01.2019"
+        android:text=""
         android:textStyle="bold"
         android:textSize="18sp"
         android:layout_marginLeft="10dp"
@@ -55,8 +55,8 @@
 
     <TextView
         android:id="@+id/txtDescriptionL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
         android:layout_alignParentRight="true"
         android:layout_marginTop="110dp"
         android:layout_marginRight="17dp"
@@ -65,31 +65,11 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <!--<TextView-->
-    <!--android:id="@+id/txtHumidity"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text=""-->
-    <!--android:textStyle="bold"-->
-    <!--android:textSize="30sp"-->
-    <!--android:gravity="center"-->
-    <!--/>-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/txtTime"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text=""-->
-    <!--android:textStyle="bold"-->
-    <!--android:textSize="30sp"-->
-    <!--android:gravity="center"-->
-    <!--/>-->
-
     <TextView
         android:id="@+id/txtCelsiusL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="-4"
+        android:text=""
         android:textStyle="bold"
         android:textSize="45sp"
         android:layout_gravity="left"

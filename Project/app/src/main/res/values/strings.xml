@@ -44,4 +44,18 @@
     <string name="check_connection">Check your network connection</string>
     <string name="welcome_in_weather_app">Welcome in weather app!</string>
     <string name="back_to_main">Back to main</string>
+
+    <string name="poka_prognoz_na_5_dni">Show 5-day forecast</string>
+
+    <string name="clear_sky">Clear sky</string>
+    <string name="few_clouds">Few clouds</string>
+    <string name="scattered_clouds">Scattered clouds</string>
+    <string name="broken_clouds">Broken clouds</string>
+    <string name="shower_rain">Shower rain</string>
+    <string name="rain">Rain</string>
+    <string name="thunderstorm">Thunderstorm</string>
+    <string name="snow">Snow</string>
+    <string name="light_snow">Light snow</string>
+    <string name="mist">Mist</string>
+
 </resources>
