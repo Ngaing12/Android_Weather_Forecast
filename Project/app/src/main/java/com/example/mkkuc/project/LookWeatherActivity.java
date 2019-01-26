@@ -109,7 +109,40 @@ public class LookWeatherActivity extends AppCompatActivity {
         String city = weatherEntity.getCity();
         String description = weatherEntity.getDescription();
 
-        description = new FixDescription().fixDescription(description);
+        // description = new FixDescription().fixDescription(description);
+        switch(description){
+            case "clear sky":
+                description = resources.getString(R.string.clear_sky);
+                break;
+            case "few clouds":
+                description = resources.getString(R.string.few_clouds);
+                break;
+            case "scattered clouds":
+                description = resources.getString(R.string.scattered_clouds);
+                break;
+            case "broken clouds":
+                description = resources.getString(R.string.broken_clouds);
+                break;
+            case "shower rain":
+                description = resources.getString(R.string.shower_rain);
+                break;
+            case "rain":
+                description = resources.getString(R.string.rain);
+                break;
+            case "thunderstorm":
+                description = resources.getString(R.string.thunderstorm);
+                break;
+            case "snow":
+                description = resources.getString(R.string.snow);
+                break;
+            case "light snow":
+                description = resources.getString(R.string.light_snow);
+                break;
+            case "mist":
+                description = resources.getString(R.string.mist);
+                break;
+        }
+
 
         String lastUpdate = Common.getDateNow();
         int humidity = weatherEntity.getHumidity();
@@ -121,33 +154,19 @@ public class LookWeatherActivity extends AppCompatActivity {
 
         String timeNow = Common.getTimeNow();
         String startTimeParse[] = timeNow.split(":");
-        String sunriseTime[] = Common.unixTimeStampToDateTime(sunrise).split(":");
         int nowHour = Integer.parseInt(startTimeParse[0]);
-        int nowMinute = Integer.parseInt(startTimeParse[1]);
-        int sunriseHour = Integer.parseInt(sunriseTime[0]);
-        int sunriseMinute = Integer.parseInt(sunriseTime[1]);
-        int hourResultRise = sunriseHour - nowHour;
-        int minutesResultRise = sunriseMinute - nowMinute;
-
-        String sunsetTime[] = Common.unixTimeStampToDateTime(sunset).split(":");
-        int sunsetHour = Integer.parseInt(sunriseTime[0]);
-        int sunsetMinute = Integer.parseInt(sunriseTime[1]);
-        int hourResultSet = sunriseHour - nowHour;
-        int minutesResultSet = sunriseMinute - nowMinute;
 
         int color = Color.BLACK;
         boolean isDay = false;
-        if(hourResultRise < 0)
-            if(hourResultSet > 0)
+        if(nowHour >= 8)
+            if(nowHour <= 17)
                 isDay = true;
-            else if (hourResultSet == 0 && minutesResultSet >= 0)
-                isDay = true;
-            else if (hourResultRise == 0 && minutesResultRise <= 0)
-                isDay = true;
+            else
+                isDay = false;
 
         if(isDay)
         {
-            if(description.contains("snow") || description.contains("Snow"))
+            if(description.contains(resources.getString(R.string.light_snow)) || description.contains(resources.getString(R.string.snow)))
                 layout.setBackgroundResource(R.drawable.winter);
             else
                 layout.setBackgroundResource(R.drawable.day);
@@ -155,12 +174,11 @@ public class LookWeatherActivity extends AppCompatActivity {
         else
         {
             color = Color.WHITE;
-            if(description.contains("snow") || description.contains("Snow"))
+            if(description.contains(resources.getString(R.string.light_snow)) || description.contains(resources.getString(R.string.snow)))
                 layout.setBackgroundResource(R.drawable.winter_night);
             else
                 layout.setBackgroundResource(R.drawable.night);
         }
-
 
         txtCityAndCountryL.setTextColor(color);
         txtLastUpdateL.setTextColor(color);
@@ -253,6 +271,9 @@ public class LookWeatherActivity extends AppCompatActivity {
                 case "snow":
                     description = resources.getString(R.string.snow);
                     break;
+                case "light snow":
+                    description = resources.getString(R.string.light_snow);
+                    break;
                 case "mist":
                     description = resources.getString(R.string.mist);
                     break;
@@ -269,33 +290,19 @@ public class LookWeatherActivity extends AppCompatActivity {
 
             String timeNow = Common.getTimeNow();
             String startTimeParse[] = timeNow.split(":");
-            String sunriseTime[] = Common.unixTimeStampToDateTime(sunrise).split(":");
             int nowHour = Integer.parseInt(startTimeParse[0]);
-            int nowMinute = Integer.parseInt(startTimeParse[1]);
-            int sunriseHour = Integer.parseInt(sunriseTime[0]);
-            int sunriseMinute = Integer.parseInt(sunriseTime[1]);
-            int hourResultRise = sunriseHour - nowHour;
-            int minutesResultRise = sunriseMinute - nowMinute;
-
-            String sunsetTime[] = Common.unixTimeStampToDateTime(sunset).split(":");
-            int sunsetHour = Integer.parseInt(sunriseTime[0]);
-            int sunsetMinute = Integer.parseInt(sunriseTime[1]);
-            int hourResultSet = sunriseHour - nowHour;
-            int minutesResultSet = sunriseMinute - nowMinute;
 
             int color = Color.BLACK;
             boolean isDay = false;
-            if(hourResultRise < 0)
-                if(hourResultSet > 0)
+            if(nowHour >= 8)
+                if(nowHour <= 17)
                     isDay = true;
-                else if (hourResultSet == 0 && minutesResultSet >= 0)
-                    isDay = true;
-                else if (hourResultRise == 0 && minutesResultRise <= 0)
-                    isDay = true;
+                else
+                    isDay = false;
 
             if(isDay)
             {
-                if(description.contains("snow") || description.contains("Snow"))
+                if(description.contains(resources.getString(R.string.light_snow)) || description.contains(resources.getString(R.string.snow)))
                     layout.setBackgroundResource(R.drawable.winter);
                 else
                     layout.setBackgroundResource(R.drawable.day);
@@ -303,7 +310,7 @@ public class LookWeatherActivity extends AppCompatActivity {
             else
             {
                 color = Color.WHITE;
-                if(description.contains("snow") || description.contains("Snow"))
+                if(description.contains(resources.getString(R.string.light_snow)) || description.contains(resources.getString(R.string.snow)))
                     layout.setBackgroundResource(R.drawable.winter_night);
                 else
                     layout.setBackgroundResource(R.drawable.night);

@@ -198,6 +198,9 @@ public class FindWeatherActivity extends AppCompatActivity {
                     case "snow":
                         description = resources.getString(R.string.snow);
                         break;
+                    case "light snow":
+                        description = resources.getString(R.string.light_snow);
+                        break;
                     case "mist":
                         description = resources.getString(R.string.mist);
                         break;
@@ -210,36 +213,21 @@ public class FindWeatherActivity extends AppCompatActivity {
                 lat = openWeatherMap.getCoord().getLat();
                 lon = openWeatherMap.getCoord().getLon();
 
-
                 String timeNow = Common.getTimeNow();
                 String startTimeParse[] = timeNow.split(":");
-                String sunriseTime[] = Common.unixTimeStampToDateTime(sunrise).split(":");
                 int nowHour = Integer.parseInt(startTimeParse[0]);
-                int nowMinute = Integer.parseInt(startTimeParse[1]);
-                int sunriseHour = Integer.parseInt(sunriseTime[0]);
-                int sunriseMinute = Integer.parseInt(sunriseTime[1]);
-                int hourResultRise = sunriseHour - nowHour;
-                int minutesResultRise = sunriseMinute - nowMinute;
 
                 int color = Color.BLACK;
-                String sunsetTime[] = Common.unixTimeStampToDateTime(sunset).split(":");
-                int sunsetHour = Integer.parseInt(sunriseTime[0]);
-                int sunsetMinute = Integer.parseInt(sunriseTime[1]);
-                int hourResultSet = sunriseHour - nowHour;
-                int minutesResultSet = sunriseMinute - nowMinute;
-
                 boolean isDay = false;
-                if(hourResultRise < 0)
-                    if(hourResultSet > 0)
+                if(nowHour >= 8)
+                    if(nowHour <= 17)
                         isDay = true;
-                    else if (hourResultSet == 0 && minutesResultSet >= 0)
-                        isDay = true;
-                    else if (hourResultRise == 0 && minutesResultRise <= 0)
-                        isDay = true;
+                    else
+                        isDay = false;
 
                 if(isDay)
                 {
-                    if(description.contains("snow") || description.contains("Snow"))
+                    if(description.contains(resources.getString(R.string.light_snow)) || description.contains(resources.getString(R.string.snow)))
                         layout.setBackgroundResource(R.drawable.winter);
                     else
                         layout.setBackgroundResource(R.drawable.day);
@@ -247,7 +235,7 @@ public class FindWeatherActivity extends AppCompatActivity {
                 else
                 {
                     color = Color.WHITE;
-                    if(description.contains("snow") || description.contains("Snow"))
+                    if(description.contains(resources.getString(R.string.light_snow)) || description.contains(resources.getString(R.string.snow)))
                         layout.setBackgroundResource(R.drawable.winter_night);
                     else
                         layout.setBackgroundResource(R.drawable.night);

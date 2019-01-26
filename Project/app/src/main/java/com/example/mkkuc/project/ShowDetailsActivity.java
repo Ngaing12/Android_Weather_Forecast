@@ -199,6 +199,9 @@ public class ShowDetailsActivity extends AppCompatActivity {
                 case "snow":
                     description = resources.getString(R.string.snow);
                     break;
+                case "light snow":
+                    description = resources.getString(R.string.light_snow);
+                    break;
                 case "mist":
                     description = resources.getString(R.string.mist);
                     break;
